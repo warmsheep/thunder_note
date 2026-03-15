@@ -1,0 +1,3120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>闪记 - Flash Note</title>
+  <style>
+    :root {
+      --primary: #07C160;
+      --primary-dark: #06AD56;
+      --white: #FFFFFF;
+      --bg-gray: #F5F5F5;
+      --text-primary: #191919;
+      --text-secondary: #666666;
+      --border: #E5E5E5;
+    }
+    
+    html.dark-mode {
+      --primary: #07C160;
+      --primary-dark: #06AD56;
+      --white: #1C1C1E;
+      --bg-gray: #000000;
+      --text-primary: #FFFFFF;
+      --text-secondary: #8E8E93;
+      --border: #38383A;
+    }
+    
+    html.dark-mode body,
+    html.dark-mode .phone-frame {
+      background: #000000;
+    }
+    
+    html.dark-mode .phone-screen,
+    html.dark-mode .page,
+    html.dark-mode .chat-page,
+    html.dark-mode .notes-page,
+    html.dark-mode .collections-page,
+    html.dark-mode .favorites-page,
+    html.dark-mode .profile-page {
+      background: #1C1C1E;
+    }
+    
+    html.dark-mode .chat-input-area,
+    html.dark-mode .chat-tools,
+    html.dark-mode .note-item,
+    html.dark-mode .collection-item,
+    html.dark-mode .timeline-item,
+    html.dark-mode .menu-item,
+    html.dark-mode .tab-item {
+      background: #2C2C2E;
+      border-color: #38383A;
+    }
+    
+    html.dark-mode .chat-input {
+      background: #2C2C2E;
+      border-color: #38383A;
+      color: #FFFFFF;
+    }
+    
+    html.dark-mode .modal-content,
+    html.dark-mode .image-picker-content,
+    html.dark-mode .settings-modal-content {
+      background: #2C2C2E;
+      color: #FFFFFF;
+    }
+    
+    html.dark-mode .form-input,
+    html.dark-mode .image-picker-input {
+      background: #1C1C1E;
+      border-color: #38383A;
+      color: #FFFFFF;
+    }
+    
+    html.dark-mode .avatar-option {
+      background: #1C1C1E;
+    }
+    
+    html.dark-mode .avatar-option.selected {
+      background: var(--primary);
+    }
+    
+    html.dark-mode .btn-secondary {
+      background: #48484A;
+      color: #FFFFFF;
+    }
+    
+    html.dark-mode .profile-stats,
+    html.dark-mode .heatmap-section {
+      background: #2C2C2E;
+    }
+    
+    html.dark-mode .collection-section {
+      background: #2C2C2E;
+    }
+    
+    html.dark-mode .empty-state {
+      background: #2C2C2E;
+    }
+    
+    html.dark-mode .empty-icon,
+    html.dark-mode .empty-text {
+      color: #8E8E93;
+    }
+    
+    html.dark-mode .note-name,
+    html.dark-mode .note-preview,
+    html.dark-mode .note-time,
+    html.dark-mode .collection-name,
+    html.dark-mode .collection-count,
+    html.dark-mode .collection-note-name,
+    html.dark-mode .collection-note-preview,
+    html.dark-mode .timeline-text,
+    html.dark-mode .timeline-source,
+    html.dark-mode .timeline-date,
+    html.dark-mode .profile-name,
+    html.dark-mode .profile-id,
+    html.dark-mode .stat-num,
+    html.dark-mode .stat-label,
+    html.dark-mode .heatmap-title,
+    html.dark-mode .menu-text,
+    html.dark-mode .settings-text,
+    html.dark-mode .msg-content,
+    html.dark-mode .tab-text {
+      color: #FFFFFF;
+    }
+    
+    html.dark-mode .note-preview,
+    html.dark-mode .note-time,
+    html.dark-mode .collection-count,
+    html.dark-mode .collection-note-preview,
+    html.dark-mode .timeline-source,
+    html.dark-mode .profile-id,
+    html.dark-mode .stat-label,
+    html.dark-mode .menu-arrow {
+      color: #8E8E93;
+    }
+    
+    html.dark-mode .message.received .msg-content {
+      background: #2C2C2E;
+      color: #FFFFFF;
+    }
+    
+    html.dark-mode .message.sent .msg-content {
+      background: var(--primary);
+      color: #FFFFFF;
+    }
+    
+    html.dark-mode .tab-item {
+      color: #8E8E93;
+    }
+    
+    html.dark-mode .tab-item.active {
+      color: var(--primary);
+    }
+    
+    html.dark-mode .notes-header,
+    html.dark-mode .collections-header,
+    html.dark-mode .favorites-header,
+    html.dark-mode .chat-header {
+      background: #1C1C1E;
+      border-bottom-color: #38383A;
+    }
+    
+    html.dark-mode .page-title,
+    html.dark-mode .chat-title {
+      color: #FFFFFF;
+    }
+    
+    html.dark-mode .category-section {
+      color: #8E8E93;
+    }
+    
+    html.dark-mode .tool-label {
+      color: #8E8E93;
+    }
+    
+    html.dark-mode .tool-icon svg {
+      stroke: #8E8E93;
+    }
+    
+    html.dark-mode .modal-title {
+      color: #FFFFFF;
+    }
+    
+    html.dark-mode .form-label {
+      color: #FFFFFF;
+    }
+    
+    html.dark-mode .image-picker-title,
+    html.dark-mode .image-picker-close {
+      color: #FFFFFF;
+    }
+    
+    html.dark-mode .settings-title,
+    html.dark-mode .settings-close {
+      color: #FFFFFF;
+    }
+    
+    html.dark-mode .about-version,
+    html.dark-mode .about-author,
+    html.dark-mode .about-desc {
+      color: #8E8E93;
+    }
+    
+    html.dark-mode .thanks-item {
+      color: #8E8E93;
+      border-bottom-color: #38383A;
+    }
+    
+    html.dark-mode .avatar-option {
+      color: #FFFFFF;
+    }
+    
+    html.dark-mode .voice-btn svg,
+    html.dark-mode .add-btn-chat svg {
+      stroke: #8E8E93;
+    }
+    
+    html.dark-mode input::placeholder {
+      color: #636366;
+    }
+    
+    html.dark-mode .send-btn svg {
+      stroke: #FFFFFF;
+    }
+    
+    html.dark-mode .page.active {
+      background: #1C1C1E;
+    }
+    
+    html.dark-mode .msg-voice {
+      color: #FFFFFF;
+    }
+    
+    html.dark-mode #splash {
+      background: #000000;
+    }
+    
+    html.dark-mode #splash .splash-logo,
+    html.dark-mode #splash .splash-title {
+      color: #FFFFFF;
+    }
+    
+    html.dark-mode #login,
+    html.dark-mode #register {
+      background: #000000;
+    }
+    
+    html.dark-mode .auth-logo {
+      color: #FFFFFF;
+    }
+    
+    html.dark-mode .auth-title {
+      color: #FFFFFF;
+    }
+    
+    html.dark-mode .auth-subtitle {
+      color: #8E8E93;
+    }
+    
+    html.dark-mode .auth-link {
+      color: var(--primary);
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    html, body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #E8E8E8;
+      height: 100vh;
+      width: 100vw;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .phone-frame {
+      width: 100%;
+      height: 100vh;
+      max-width: 400px;
+      background: #333;
+      border-radius: 0;
+      padding: 6px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+      position: relative;
+      box-sizing: border-box;
+    }
+    
+    @media (min-width: 450px) {
+      .phone-frame {
+        border-radius: 40px;
+        height: 92vh;
+        max-height: 860px;
+      }
+    }
+    
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      background: #FFFFFF;
+      border-radius: 34px;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    @media (min-width: 450px) {
+      .phone-screen {
+        border-radius: 28px;
+      }
+    }
+    
+    .app-container {
+      width: 100%;
+      height: 100%;
+      background: #FFFFFF;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .page {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+      flex-direction: column;
+    }
+    
+    .page.active { display: flex; }
+    
+    #chat-page {
+      height: 100%;
+      overflow: hidden;
+      padding-bottom: 60px;
+      box-sizing: border-box;
+    }
+    
+    #chat-page .chat-content {
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    #chat-page .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 12px;
+      background: #EDEDED;
+    }
+    
+    #chat-page .chat-input-area {
+      background: #F8F8F8;
+      padding: 8px 12px;
+      border-top: 1px solid #E5E5E5;
+      min-height: 56px;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 5;
+    }
+    
+    #chat-page .chat-tools {
+      flex-shrink: 0;
+      background: #F8F8F8;
+      padding: 12px;
+      border-top: 1px solid #E5E5E5;
+      display: none;
+    }
+    
+    #chat-page .chat-tools.show {
+      display: flex;
+    }
+    
+    #splash {
+      background: var(--primary);
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .splash-logo {
+      width: 100px; height: 100px;
+      background: var(--white);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 50px;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    .splash-title {
+      color: var(--white);
+      font-size: 28px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    
+    #login, #register {
+      background: var(--white);
+      padding: 50px 24px 40px;
+    }
+    
+    .auth-logo {
+      width: 80px; height: 80px;
+      background: #E8F8EE;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      margin: 0 auto 30px;
+    }
+    
+    .auth-title {
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    
+    .auth-subtitle {
+      text-align: center;
+      color: var(--text-secondary);
+      margin-bottom: 40px;
+    }
+    
+    .form-group { margin-bottom: 20px; }
+    
+    .form-label {
+      display: block;
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 16px;
+      outline: none;
+    }
+    
+    .form-input:focus { border-color: var(--primary); }
+    
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    
+    .btn-primary {
+      background: var(--primary);
+      color: var(--white);
+    }
+    
+    .btn-primary:active { background: var(--primary-dark); }
+    
+    .btn-secondary {
+      background: #E8F8EE;
+      color: var(--primary);
+    }
+    
+    .auth-link {
+      color: var(--primary);
+      text-align: center;
+      display: block;
+      margin-top: 16px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    
+    .server-link-wrapper {
+      margin-top: 20px;
+      position: relative;
+      z-index: 100;
+    }
+    
+    .server-link {
+      color: var(--primary);
+      text-align: center;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .server-link-arrow {
+      font-size: 18px;
+    }
+    
+    .server-option-list {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    
+    .server-option-item {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    .server-option-item:last-child {
+      border-bottom: none;
+    }
+    
+    .server-option-item:hover {
+      background: var(--bg-gray);
+    }
+    
+    .server-option-icon {
+      font-size: 20px;
+      margin-right: 12px;
+    }
+    
+    .server-option-name {
+      flex: 1;
+      font-size: 15px;
+    }
+    
+    .server-option-check {
+      color: var(--primary);
+      font-size: 16px;
+    }
+    
+    html.dark-mode .server-option-name {
+      color: #FFFFFF;
+    }
+    
+    #server-settings {
+      background: var(--white);
+      padding: 50px 24px 40px;
+    }
+    
+    .auth-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+    
+    .back-arrow {
+      font-size: 32px;
+      color: var(--primary);
+      cursor: pointer;
+      margin-right: 16px;
+      line-height: 1;
+    }
+    
+    html.dark-mode #server-settings {
+      background: #000000;
+    }
+    
+    html.dark-mode #server-settings .form-label {
+      color: #FFFFFF;
+    }
+    
+    html.dark-mode .server-option-item {
+      border-bottom-color: #38383A;
+    }
+    
+    html.dark-mode .server-option-item:hover {
+      background: #2C2C2E;
+    }
+    
+    .server-link {
+      color: var(--primary);
+      text-align: center;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    html.dark-mode .auth-header .auth-title {
+      color: #FFFFFF;
+      text-align: center;
+      flex: 1;
+    }
+
+    .profile-sub-page {
+      background: var(--white);
+      padding: 50px 24px 40px;
+    }
+
+    .profile-sub-content {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 60px;
+    }
+
+    .profile-sub-page .auth-header .auth-title {
+      flex: 1;
+      text-align: center;
+      margin-right: 48px;
+    }
+
+    .profile-sub-page .settings-list {
+      padding: 0;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--white);
+    }
+
+    .profile-sub-page .settings-item {
+      padding: 16px;
+    }
+
+    .profile-sub-page .settings-item:last-child {
+      border-bottom: none;
+    }
+
+    .profile-sub-page .about-content {
+      padding: 8px 0 24px;
+    }
+
+    .profile-sub-page .thanks-list {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .profile-sub-page .thanks-item {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .profile-sub-page .thanks-item:last-child {
+      border-bottom: none;
+    }
+
+    html.dark-mode .profile-sub-page .settings-list,
+    html.dark-mode .profile-sub-page .thanks-list {
+      background: #2C2C2E;
+      border-color: #38383A;
+    }
+
+    html.dark-mode .profile-sub-page .settings-item,
+    html.dark-mode .profile-sub-page .thanks-item {
+      border-bottom-color: #38383A;
+    }
+
+    html.dark-mode .profile-sub-page .about-name,
+    html.dark-mode .profile-sub-page .about-logo {
+      color: #FFFFFF;
+    }
+    
+    .server-arrow {
+      font-size: 10px;
+      transition: transform 0.2s;
+    }
+    
+    .server-dropdown {
+      display: none;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      top: 100%;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 200px;
+      z-index: 100;
+      margin-top: 8px;
+    }
+    
+    .server-dropdown.show {
+      display: block;
+    }
+    
+    .server-dropdown-item {
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+    
+    .server-dropdown-item:first-child {
+      border-radius: 10px 10px 0 0;
+    }
+    
+    .server-dropdown-item:last-child {
+      border-radius: 0 0 10px 10px;
+    }
+    
+    .server-dropdown-item:hover {
+      background: var(--bg-gray);
+    }
+    
+    .server-url-group {
+      display: none;
+      margin-top: 12px;
+      gap: 8px;
+      justify-content: center;
+      text-align: center;
+    }
+    
+    .server-url-group.show {
+      display: flex;
+    }
+    
+    .server-url-group .form-input {
+      flex: 1;
+      padding: 10px 12px;
+      font-size: 13px;
+    }
+    
+    .btn-small {
+      padding: 10px 16px;
+      font-size: 13px;
+    }
+    
+    html.dark-mode .server-dropdown {
+      background: #2C2C2E;
+      border-color: #38383A;
+    }
+    
+    html.dark-mode .server-dropdown-item:hover {
+      background: #38383A;
+    }
+    
+    .tab-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      background: var(--white);
+      border-top: 1px solid var(--border);
+      display: flex;
+      z-index: 10;
+    }
+    
+    .tab-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+    
+    .tab-item.active { color: var(--primary); }
+    
+    .tab-icon { font-size: 22px; margin-bottom: 2px; }
+    .tab-icon svg { stroke: #666; }
+    .tab-item.active .tab-icon svg { stroke: var(--primary); }
+    
+    .notes-header {
+      background: var(--white);
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    html.dark-mode .notes-header {
+      background: #1C1C1E;
+      border-bottom-color: #38383A;
+    }
+    
+    .notes-title { font-size: 20px; font-weight: bold; }
+    
+    html.dark-mode .notes-title {
+      color: #FFFFFF;
+    }
+    
+    .add-btn {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      border-radius: 50%;
+      color: #FFFFFF;
+      font-size: 28px;
+      font-weight: 400;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(7, 193, 96, 0.3);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .add-btn svg {
+      stroke: #FFFFFF;
+    }
+    
+    .add-btn:active {
+      transform: scale(0.95);
+      box-shadow: 0 1px 4px rgba(7, 193, 96, 0.3);
+    }
+    
+    .notes-list {
+      flex: 1;
+      overflow-y: auto;
+      background: var(--white);
+    }
+    
+    .note-item {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    
+    .note-item:active { background: #F8F8F8; }
+    
+    .note-avatar {
+      width: 50px; height: 50px;
+      background: #E8F8EE;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      margin-right: 14px;
+    }
+    
+    .note-info { flex: 1; overflow: hidden; }
+    
+    .note-name {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    
+    .note-preview {
+      font-size: 14px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .chat-header {
+      background: var(--white);
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+    }
+    
+    .back-btn {
+      font-size: 22px;
+      margin-right: 12px;
+      cursor: pointer;
+    }
+    
+    .chat-title { font-size: 18px; font-weight: bold; }
+    
+    .chat-more {
+      margin-left: auto;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    
+    .chat-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      overflow: hidden;
+    }
+    
+    .message {
+      margin-bottom: 16px;
+      display: flex;
+      align-items: flex-start;
+    }
+    
+    .message.sent { flex-direction: row-reverse; }
+    
+    .msg-avatar {
+      width: 38px; height: 38px;
+      background: #E8F8EE;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin: 0 8px;
+      flex-shrink: 0;
+    }
+    
+    .msg-content {
+      max-width: 72%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    
+    .message.sent .msg-content {
+      background: #95EC69;
+    }
+    
+    .message.received .msg-content {
+      background: var(--white);
+    }
+    
+    .msg-image {
+      max-width: 200px;
+      border-radius: 8px;
+    }
+    
+    .msg-voice {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 80px;
+    }
+    
+    .msg-file {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px;
+      background: #F5F5F5;
+      border-radius: 8px;
+      min-width: 160px;
+    }
+    
+    .msg-file-icon {
+      font-size: 28px;
+    }
+    
+    .msg-file-info {
+      flex: 1;
+      overflow: hidden;
+    }
+    
+    .msg-file-name {
+      font-size: 14px;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 120px;
+    }
+    
+    .msg-file-size {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+    
+    .voice-wave {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      height: 20px;
+    }
+    
+    .voice-wave span {
+      width: 3px;
+      background: var(--primary);
+      border-radius: 2px;
+      animation: wave 0.5s ease-in-out infinite;
+    }
+    
+    .voice-wave span:nth-child(1) { height: 8px; animation-delay: 0s; }
+    .voice-wave span:nth-child(2) { height: 16px; animation-delay: 0.1s; }
+    .voice-wave span:nth-child(3) { height: 12px; animation-delay: 0.2s; }
+    .voice-wave span:nth-child(4) { height: 20px; animation-delay: 0.3s; }
+    
+    @keyframes wave {
+      0%, 100% { transform: scaleY(0.5); }
+      50% { transform: scaleY(1); }
+    }
+    
+    .chat-input-area {
+      background: #F8F8F8;
+      padding: 8px 12px;
+      border-top: 1px solid #E5E5E5;
+      min-height: 56px;
+      flex-shrink: 0;
+    }
+    
+    .chat-input-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .chat-input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1px solid #E5E5E5;
+      border-radius: 20px;
+      font-size: 15px;
+      outline: none;
+      background: #FFFFFF;
+    }
+    
+    .chat-input:focus { border-color: var(--primary); }
+    
+    .chat-btn {
+      width: 36px; height: 36px;
+      border: none;
+      background: none;
+      font-size: 22px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+    
+    .chat-btn:active { background: #E5E5E5; }
+    
+    .add-btn-chat {
+      background: #F0F0F0;
+      font-size: 20px;
+    }
+    
+    .send-btn {
+      background: var(--primary);
+      color: #FFFFFF;
+    }
+    
+    .voice-btn {
+      background: #F0F0F0;
+      font-size: 18px;
+    }
+    
+    .voice-btn.recording {
+      background: #FF3B30;
+      color: #FFFFFF;
+      animation: pulse-voice 1s infinite;
+    }
+    
+    @keyframes pulse-voice {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    
+    .voice-panel {
+      display: none;
+      position: absolute;
+      bottom: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #FFFFFF;
+      border-radius: 12px;
+      padding: 20px 30px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      flex-direction: column;
+      align-items: center;
+      z-index: 50;
+    }
+    
+    .voice-panel.show { display: flex; }
+    
+    .voice-wave-display {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      height: 40px;
+      margin-bottom: 12px;
+    }
+    
+    .voice-wave-display span {
+      width: 4px;
+      background: var(--primary);
+      border-radius: 2px;
+      animation: voice-wave 0.5s ease-in-out infinite;
+    }
+    
+    .voice-wave-display span:nth-child(1) { height: 15px; animation-delay: 0s; }
+    .voice-wave-display span:nth-child(2) { height: 25px; animation-delay: 0.1s; }
+    .voice-wave-display span:nth-child(3) { height: 35px; animation-delay: 0.2s; }
+    .voice-wave-display span:nth-child(4) { height: 20px; animation-delay: 0.3s; }
+    .voice-wave-display span:nth-child(5) { height: 30px; animation-delay: 0.4s; }
+    .voice-wave-display span:nth-child(6) { height: 18px; animation-delay: 0.5s; }
+    .voice-wave-display span:nth-child(7) { height: 28px; animation-delay: 0.6s; }
+    
+    @keyframes voice-wave {
+      0%, 100% { transform: scaleY(0.4); }
+      50% { transform: scaleY(1); }
+    }
+    
+    .voice-hint {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 16px;
+    }
+    
+    .voice-actions {
+      display: flex;
+      gap: 20px;
+    }
+    
+    .voice-action {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+    }
+    
+    .voice-action-icon {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin-bottom: 6px;
+    }
+    
+    .voice-send { background: var(--primary); color: #FFFFFF; }
+    .voice-cancel { background: #FF3B30; color: #FFFFFF; }
+    
+    .voice-action-label { font-size: 12px; color: #666; }
+    
+    .tool-item {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      cursor: pointer;
+      flex: 1;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .tool-icon {
+      width: 44px; height: 44px;
+      background: #F5F5F5;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0;
+    }
+    
+    .tool-icon svg { stroke: #666; }
+    .tool-label { font-size: 12px; color: #666; }
+    
+    .modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 100;
+    }
+    
+    .modal.show { display: flex; }
+    
+    .modal-content {
+      width: 100%;
+      max-width: 390px;
+      background: var(--white);
+      border-radius: 20px 20px 0 0;
+      padding: 24px;
+      animation: slideUp 0.3s ease;
+    }
+    
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+    
+    .modal-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    
+    .avatar-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    
+    .avatar-option {
+      width: 44px; height: 44px;
+      background: #F5F5F5;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      cursor: pointer;
+      border: 2px solid transparent;
+    }
+    
+    .avatar-option.selected {
+      border-color: var(--primary);
+      background: #E8F8EE;
+    }
+    
+    .modal-btns { display: flex; gap: 12px; }
+    .modal-btns .btn { margin: 0; }
+    
+    .settings-modal {
+      align-items: flex-end;
+    }
+    
+    .settings-modal-content {
+      width: 100%;
+      max-width: 390px;
+      background: var(--white);
+      border-radius: 20px 20px 0 0;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    
+    .settings-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .settings-title {
+      font-size: 18px;
+      font-weight: bold;
+    }
+    
+    .settings-close {
+      font-size: 24px;
+      color: #999;
+      cursor: pointer;
+    }
+    
+    .settings-list {
+      padding: 0 20px;
+    }
+    
+    .settings-item {
+      display: flex;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+    }
+    
+    .settings-icon {
+      font-size: 20px;
+      margin-right: 12px;
+    }
+    
+    .settings-text {
+      flex: 1;
+      font-size: 16px;
+    }
+    
+    .settings-arrow {
+      color: #999;
+      font-size: 18px;
+    }
+    
+    .toggle-switch {
+      position: relative;
+      width: 50px;
+      height: 28px;
+    }
+    
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0;
+      right: 0; bottom: 0;
+      background-color: #ccc;
+      transition: 0.3s;
+      border-radius: 28px;
+    }
+    
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 24px;
+      width: 24px;
+      left: 2px;
+      bottom: 2px;
+      background-color: white;
+      transition: 0.3s;
+      border-radius: 50%;
+    }
+    
+    .toggle-switch input:checked + .toggle-slider {
+      background-color: var(--primary);
+    }
+    
+    .toggle-switch input:checked + .toggle-slider:before {
+      transform: translateX(22px);
+    }
+    
+    .about-content {
+      text-align: center;
+      padding: 20px 0;
+    }
+    
+    .about-logo {
+      font-size: 60px;
+      margin-bottom: 16px;
+    }
+    
+    .about-name {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    
+    .about-version {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+    }
+    
+    .about-author {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+    
+    .about-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    
+    .thanks-list {
+      text-align: left;
+    }
+    
+    .thanks-item {
+      padding: 8px 0;
+      font-size: 15px;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .thanks-item:last-child {
+      border-bottom: none;
+    }
+    
+    .toast {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0,0,0,0.7);
+      color: var(--white);
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-size: 14px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      z-index: 200;
+      pointer-events: none;
+    }
+    
+    html.dark-mode .toast {
+      background: rgba(255,255,255,0.95);
+      color: #191919;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    
+    html.dark-mode .collections-title,
+    html.dark-mode .favorites-title {
+      color: #FFFFFF;
+    }
+    
+    .toast.show { opacity: 1; }
+    
+    .tab-content {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 60px;
+    }
+    
+    .heatmap-section {
+      background: var(--white);
+      padding: 20px;
+      margin-bottom: 12px;
+    }
+    
+    .heatmap-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    
+    .heatmap-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+    
+    .heatmap-day {
+      aspect-ratio: 1;
+      border-radius: 4px;
+      background: #EBEDF0;
+    }
+    
+    .heatmap-day.level-1 { background: #C6E48B; }
+    .heatmap-day.level-2 { background: #7BC96F; }
+    .heatmap-day.level-3 { background: #239A3B; }
+    .heatmap-day.level-4 { background: #196127; }
+    
+    .heatmap-months {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-size: 10px;
+      color: var(--text-secondary);
+    }
+    
+    .profile-header {
+      background: linear-gradient(135deg, var(--primary), #5AC8A8);
+      padding: 30px 20px;
+      color: var(--white);
+      display: flex;
+      align-items: center;
+    }
+    
+    .profile-avatar {
+      width: 70px; height: 70px;
+      background: var(--white);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      margin-right: 16px;
+    }
+    
+    .profile-info { flex: 1; }
+    
+    .profile-name { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
+    .profile-id { font-size: 13px; opacity: 0.8; }
+    
+    .profile-stats {
+      display: flex;
+      background: var(--white);
+      padding: 16px 0;
+      margin-bottom: 12px;
+    }
+    
+    .stat-item {
+      flex: 1;
+      text-align: center;
+      border-right: 1px solid var(--border);
+    }
+    
+    .stat-item:last-child { border: none; }
+    
+    .stat-num { font-size: 20px; font-weight: 600; color: var(--primary); }
+    .stat-label { font-size: 12px; color: var(--text-secondary); }
+    
+    .profile-menu {
+      background: var(--white);
+    }
+    
+    .menu-item {
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    
+    .menu-icon {
+      width: 32px; height: 32px;
+      background: #F5F5F5;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      margin-right: 14px;
+    }
+    
+    .menu-text { flex: 1; font-size: 15px; }
+    .menu-arrow { color: #ccc; font-size: 14px; }
+    
+    .favorites-header {
+      background: var(--white);
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .favorites-title { font-size: 20px; font-weight: bold; }
+    
+    .favorites-list {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      background: var(--white);
+    }
+    
+    .favorites-list::-webkit-scrollbar {
+      display: none;
+    }
+    
+    .timeline-item {
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      padding-left: 40px;
+    }
+    
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: 16px;
+      top: 24px;
+      width: 10px;
+      height: 10px;
+      background: var(--primary);
+      border-radius: 50%;
+    }
+    
+    .timeline-item::after {
+      content: '';
+      position: absolute;
+      left: 20px;
+      top: 34px;
+      width: 2px;
+      height: calc(100% - 20px);
+      background: var(--border);
+    }
+    
+    .timeline-item:last-child::after { display: none; }
+    
+    .timeline-date {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+    
+    .timeline-content {
+      font-size: 15px;
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+    
+    .timeline-source {
+      font-size: 12px;
+      color: var(--primary);
+    }
+    
+    .timeline-media {
+      max-width: 200px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+    
+    .timeline-text {
+      font-size: 15px;
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+    
+    .timeline-file {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      background: #F5F5F5;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      max-width: 220px;
+    }
+    
+    .timeline-file-icon {
+      font-size: 24px;
+    }
+    
+    .timeline-file-info {
+      flex: 1;
+      overflow: hidden;
+    }
+    
+    .timeline-file-name {
+      font-size: 13px;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .timeline-file-size {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+    
+    .timeline-voice {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      background: #F5F5F5;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      min-width: 100px;
+    }
+    
+    .collect-btn {
+      position: absolute;
+      right: 16px;
+      top: 16px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    
+    .empty-state {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      padding: 40px;
+    }
+    
+    .empty-icon { font-size: 60px; margin-bottom: 16px; }
+    .empty-text { font-size: 15px; }
+    
+    .collections-header {
+      background: var(--white);
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+    }
+    
+    .collections-title { font-size: 20px; font-weight: bold; flex: 1; }
+    
+    .collection-back-btn {
+      font-size: 22px;
+      margin-right: 12px;
+      cursor: pointer;
+    }
+    
+    .category-list {
+      background: var(--white);
+      padding: 12px 16px;
+    }
+    
+    .category-item {
+      display: flex;
+      align-items: center;
+      padding: 14px 12px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    .category-item:active { background: #F5F5F5; }
+    
+    .category-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-right: 14px;
+    }
+    
+    .category-info { flex: 1; }
+    
+    .category-name { font-size: 16px; font-weight: 500; margin-bottom: 4px; }
+    
+    .category-count { font-size: 13px; color: var(--text-secondary); }
+    
+    .category-arrow {
+      font-size: 18px;
+      color: #CCC;
+    }
+    
+    .collection-all-list {
+      background: var(--white);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    .collection-all-list::-webkit-scrollbar {
+      display: none;
+    }
+    
+    .category-section {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .category-section-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .category-section .collection-note-item:last-child {
+      border-bottom: none;
+    }
+    
+    .collection-note-item {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+    }
+    
+    .collection-note-item:active { background: #F8F8F8; }
+    
+    .collection-note-avatar {
+      width: 50px; height: 50px;
+      background: #E8F8EE;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      margin-right: 14px;
+    }
+    
+    .collection-note-info { flex: 1; }
+    
+    .collection-note-name {
+      font-size: 16px;
+      font-weight: 500;
+    }
+    
+    .collection-note-time {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    
+    .collection-name { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+    .collection-count { font-size: 24px; font-weight: bold; }
+    .collection-label { font-size: 12px; opacity: 0.8; }
+    
+    /* Image Picker Modal Styles */
+    .image-picker-modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 100;
+    }
+    
+    .image-picker-modal.show { display: flex; }
+    
+    .image-picker-content {
+      width: 100%;
+      max-width: 390px;
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      padding: 20px;
+      animation: slideUp 0.3s ease;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .image-picker-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    
+    .image-picker-title {
+      font-size: 18px;
+      font-weight: bold;
+    }
+    
+    .image-picker-close {
+      font-size: 24px;
+      cursor: pointer;
+      color: #999;
+    }
+    
+    .image-preview-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+      max-height: 300px;
+      overflow-y: auto;
+      min-height: 80px;
+    }
+    
+    .image-preview-item {
+      position: relative;
+      aspect-ratio: 1;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #f5f5f5;
+    }
+    
+    .image-preview-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .image-preview-remove {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 20px;
+      height: 20px;
+      background: rgba(0,0,0,0.6);
+      border-radius: 50%;
+      color: white;
+      border: none;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .image-picker-input-area {
+      display: flex;
+      gap: 8px;
+      margin-top: auto;
+    }
+    
+    .image-picker-input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 15px;
+      outline: none;
+    }
+    
+    .image-picker-input:focus { border-color: var(--primary); }
+    
+    .image-picker-send {
+      padding: 10px 20px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    
+    .image-picker-send:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    
+    .image-picker-add {
+      padding: 8px 16px;
+      background: #f5f5f5;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      font-size: 14px;
+      cursor: pointer;
+      margin-bottom: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    /* Message Image Grid */
+    .msg-image-grid {
+      display: grid;
+      gap: 4px;
+      margin-bottom: 8px;
+    }
+    
+    .msg-image-grid.single { grid-template-columns: 1fr; }
+    .msg-image-grid.double { grid-template-columns: repeat(2, 1fr); }
+    .msg-image-grid.multiple { grid-template-columns: repeat(3, 1fr); }
+    
+    .msg-image-grid img {
+      width: 100%;
+      border-radius: 8px;
+      max-height: 200px;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-frame">
+    <div class="phone-screen">
+      <div class="app-container">
+        
+        <div id="splash" class="page active">
+          <div class="splash-logo">⚡</div>
+          <div class="splash-title">闪记</div>
+        </div>
+        
+        <div id="login" class="page">
+          <div class="auth-logo">⚡</div>
+          <div class="auth-title">欢迎回来</div>
+          <div class="auth-subtitle">登录以继续使用闪记</div>
+          
+          <div class="form-group">
+            <label class="form-label">邮箱</label>
+            <input type="email" class="form-input" id="login-email" placeholder="请输入邮箱">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">密码</label>
+            <input type="password" class="form-input" id="login-password" placeholder="请输入密码">
+          </div>
+          
+          <button type="button" class="btn btn-primary" onclick="doLogin()">登录</button>
+          <div class="auth-link" onclick="showRegister()">还没有账号？立即注册</div>
+          
+          <div class="server-link-wrapper">
+            <div class="server-link" onclick="showServerSettings()">
+              <span id="server-display">☁️ 闪记服务器</span>
+              <span class="server-link-arrow">›</span>
+            </div>
+          </div>
+        </div>
+        
+        <div id="server-settings" class="page">
+          <div class="auth-header">
+            <div class="back-arrow" onclick="showLoginFromSettings()">‹</div>
+            <div class="auth-title">服务器设置</div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">选择服务器</label>
+            <div class="server-option-list">
+              <div class="server-option-item" onclick="selectOfficialServer()">
+                <span class="server-option-icon">☁️</span>
+                <span class="server-option-name">闪记服务器</span>
+                <span class="server-option-check" id="official-check">✓</span>
+              </div>
+              <div class="server-option-item" onclick="showCustomServerInput()">
+                <span class="server-option-icon">🏠</span>
+                <span class="server-option-name">自托管</span>
+                <span class="server-option-check" id="custom-check"></span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group" id="custom-server-input" style="display: none;">
+            <label class="form-label">服务器地址</label>
+            <input type="url" class="form-input" id="custom-server-url" placeholder="https://your-server.com">
+          </div>
+          
+          <button type="button" class="btn btn-primary" id="save-server-btn" onclick="saveServerSettings()" style="display: none;">保存</button>
+        </div>
+        
+        <div id="register" class="page">
+          <div class="auth-logo">⚡</div>
+          <div class="auth-title">注册账号</div>
+          <div class="auth-subtitle">创建您的闪记账号</div>
+          
+          <div class="form-group">
+            <label class="form-label">用户名</label>
+            <input type="text" class="form-input" id="reg-username" placeholder="请输入用户名">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">邮箱</label>
+            <input type="email" class="form-input" id="reg-email" placeholder="请输入邮箱">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">密码</label>
+            <input type="password" class="form-input" id="reg-password" placeholder="请输入密码">
+          </div>
+          
+          <button type="button" class="btn btn-primary" onclick="doRegister()">注册</button>
+          <div class="auth-link" onclick="showLogin()">已有账号？立即登录</div>
+        </div>
+        
+        <div id="notes-page" class="page">
+          <div class="notes-header">
+            <span class="notes-title">闪记</span>
+            <div class="add-btn" onclick="showCreateModal()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <title>新建</title>
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </div>
+          </div>
+          <div class="notes-list tab-content" id="notes-list"></div>
+        </div>
+        
+        <div id="chat-page" class="page">
+          <div class="chat-header">
+            <span class="back-btn" onclick="showNotes()">←</span>
+            <span class="chat-title" id="chat-title">闪记</span>
+            <span class="chat-more" onclick="showChatOptions()">⋯</span>
+          </div>
+          <div class="chat-content">
+            <div class="chat-messages" id="chat-messages"></div>
+          </div>
+          
+          <div class="voice-panel" id="voice-panel">
+            <div class="voice-wave-display">
+              <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <div class="voice-hint">正在录音...</div>
+            <div class="voice-actions">
+              <div class="voice-action" onclick="cancelVoice()">
+                <div class="voice-action-icon voice-cancel">✕</div>
+                <div class="voice-action-label">取消</div>
+              </div>
+              <div class="voice-action" onclick="sendVoiceConfirm()">
+                <div class="voice-action-icon voice-send">✓</div>
+                <div class="voice-action-label">发送</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="chat-input-area">
+            <div class="chat-input-row">
+              <button type="button" class="chat-btn add-btn-chat" onclick="toggleTools()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><title>更多工具</title><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
+              <input type="text" class="chat-input" id="chat-input" placeholder="输入内容..." onkeypress="handleChatKey(event)">
+              <button type="button" class="chat-btn voice-btn" id="voice-btn" onmousedown="startVoice()" onmouseup="endVoice()" ontouchstart="startVoice()" ontouchend="endVoice()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><title>语音输入</title><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+              </button>
+              <button type="button" class="chat-btn send-btn" onclick="sendMessage()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><title>发送</title><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="chat-tools" id="chat-tools">
+            <div class="tool-item" onclick="sendImage()">
+              <div class="tool-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><title>发送图片</title><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              </div>
+              <div class="tool-label">图片</div>
+            </div>
+            <div class="tool-item" onclick="sendVideo()">
+              <div class="tool-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><title>发送视频</title><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+              </div>
+              <div class="tool-label">视频</div>
+            </div>
+            <div class="tool-item" onclick="sendFile()">
+              <div class="tool-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><title>发送文件</title><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              </div>
+              <div class="tool-label">文件</div>
+            </div>
+            <div class="tool-item" onclick="showToast('更多功能开发中')">
+              <div class="tool-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><title>更多功能</title><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+              </div>
+              <div class="tool-label">更多</div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="collections-page" class="page">
+          <div class="collections-header">
+            <span class="collections-title">合集</span>
+          </div>
+          <div class="collection-all-list tab-content" id="collection-all-list"></div>
+        </div>
+        
+        <div id="favorites-page" class="page">
+          <div class="favorites-header">
+            <span class="favorites-title">收藏</span>
+          </div>
+          <div class="favorites-list tab-content" id="favorites-list"></div>
+        </div>
+        
+        <div id="profile-page" class="page">
+          <div class="profile-header">
+            <div class="profile-avatar" id="profile-avatar">😊</div>
+            <div class="profile-info">
+              <div class="profile-name" id="profile-name">闪记用户</div>
+              <div class="profile-id" id="profile-id">ID: 10001</div>
+            </div>
+          </div>
+          <div class="profile-stats">
+            <div class="stat-item">
+              <div class="stat-num">156</div>
+              <div class="stat-label">闪记</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-num">23</div>
+              <div class="stat-label">收藏</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-num">1,234</div>
+              <div class="stat-label">条记录</div>
+            </div>
+          </div>
+          <div class="tab-content">
+            <div class="heatmap-section">
+              <div class="heatmap-title">本月记录</div>
+              <div class="heatmap-grid" id="heatmap"></div>
+              <div class="heatmap-months">
+                <span>1月</span><span>2月</span><span>3月</span><span>4月</span>
+              </div>
+            </div>
+            <div class="profile-menu">
+              <div class="menu-item" onclick="showAvatarPage()">
+                <div class="menu-icon">👤</div>
+                <div class="menu-text">修改头像</div>
+                <div class="menu-arrow">›</div>
+              </div>
+              <div class="menu-item" onclick="showNicknamePage()">
+                <div class="menu-icon">✏️</div>
+                <div class="menu-text">修改昵称</div>
+                <div class="menu-arrow">›</div>
+              </div>
+              <div class="menu-item" onclick="showPasswordPage()">
+                <div class="menu-icon">🔒</div>
+                <div class="menu-text">修改密码</div>
+                <div class="menu-arrow">›</div>
+              </div>
+              <div class="menu-item" onclick="showSettingsPage()">
+                <div class="menu-icon">⚙️</div>
+                <div class="menu-text">设置</div>
+                <div class="menu-arrow">›</div>
+              </div>
+              <div class="menu-item" onclick="logout()">
+                <div class="menu-icon">🚪</div>
+                <div class="menu-text">退出登录</div>
+                <div class="menu-arrow">›</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="avatar-page" class="page profile-sub-page">
+          <div class="auth-header">
+            <div class="back-arrow" onclick="showProfile()">‹</div>
+            <div class="auth-title">修改头像</div>
+          </div>
+          <div class="profile-sub-content">
+            <div class="avatar-grid" id="avatar-select-grid"></div>
+            <button type="button" class="btn btn-primary" onclick="saveAvatar()">保存头像</button>
+          </div>
+        </div>
+
+        <div id="nickname-page" class="page profile-sub-page">
+          <div class="auth-header">
+            <div class="back-arrow" onclick="showProfile()">‹</div>
+            <div class="auth-title">修改昵称</div>
+          </div>
+          <div class="profile-sub-content">
+            <div class="form-group">
+              <label class="form-label">新昵称</label>
+              <input type="text" class="form-input" id="nickname-input" placeholder="请输入新昵称" maxlength="20">
+            </div>
+            <button type="button" class="btn btn-primary" onclick="saveNickname()">保存昵称</button>
+          </div>
+        </div>
+
+        <div id="password-page" class="page profile-sub-page">
+          <div class="auth-header">
+            <div class="back-arrow" onclick="showProfile()">‹</div>
+            <div class="auth-title">修改密码</div>
+          </div>
+          <div class="profile-sub-content">
+            <div class="form-group">
+              <label class="form-label">新密码</label>
+              <input type="password" class="form-input" id="new-password" placeholder="请输入新密码" minlength="6">
+            </div>
+            <div class="form-group">
+              <label class="form-label">确认新密码</label>
+              <input type="password" class="form-input" id="confirm-password" placeholder="请确认新密码" minlength="6">
+            </div>
+            <button type="button" class="btn btn-primary" onclick="savePassword()">保存密码</button>
+          </div>
+        </div>
+
+        <div id="settings-page" class="page profile-sub-page">
+          <div class="auth-header">
+            <div class="back-arrow" onclick="showProfile()">‹</div>
+            <div class="auth-title">设置</div>
+          </div>
+          <div class="profile-sub-content">
+            <div class="settings-list">
+              <div class="settings-item" onclick="showAboutPage()">
+                <span class="settings-icon">ℹ️</span>
+                <span class="settings-text">关于</span>
+                <span class="settings-arrow">›</span>
+              </div>
+              <div class="settings-item">
+                <span class="settings-icon">🌙</span>
+                <span class="settings-text">暗黑模式</span>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="dark-mode-toggle" onchange="toggleDarkMode()">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+              <div class="settings-item" onclick="showToast('即将跳转官网')">
+                <span class="settings-icon">🌐</span>
+                <span class="settings-text">官网</span>
+                <span class="settings-arrow">›</span>
+              </div>
+              <div class="settings-item" onclick="showToast('隐私政策')">
+                <span class="settings-icon">🔒</span>
+                <span class="settings-text">隐私政策</span>
+                <span class="settings-arrow">›</span>
+              </div>
+              <div class="settings-item" onclick="showThanksPage()">
+                <span class="settings-icon">🙏</span>
+                <span class="settings-text">致谢</span>
+                <span class="settings-arrow">›</span>
+              </div>
+              <div class="settings-item" onclick="showToast('感谢反馈！我们会认真改进')">
+                <span class="settings-icon">🐛</span>
+                <span class="settings-text">反馈BUG</span>
+                <span class="settings-arrow">›</span>
+              </div>
+              <div class="settings-item" onclick="confirmLogout()">
+                <span class="settings-icon">🚪</span>
+                <span class="settings-text">退出登录</span>
+                <span class="settings-arrow">›</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="about-page" class="page profile-sub-page">
+          <div class="auth-header">
+            <div class="back-arrow" onclick="showSettingsPage()">‹</div>
+            <div class="auth-title">关于</div>
+          </div>
+          <div class="profile-sub-content">
+            <div class="about-content">
+              <div class="about-logo">⚡</div>
+              <div class="about-name">闪记 Flash Note</div>
+              <div class="about-version">版本 1.0.0</div>
+              <div class="about-author">作者：闪记团队</div>
+              <div class="about-desc">一款简洁高效的闪记应用</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="thanks-page" class="page profile-sub-page">
+          <div class="auth-header">
+            <div class="back-arrow" onclick="showSettingsPage()">‹</div>
+            <div class="auth-title">致谢</div>
+          </div>
+          <div class="profile-sub-content">
+            <div class="thanks-list">
+              <div class="thanks-item">感谢所有用户的使用与支持</div>
+              <div class="thanks-item">感谢开源社区的贡献</div>
+              <div class="thanks-item">感谢设计灵感来源</div>
+              <div class="thanks-item">感谢 GLM-5 / MiniMax M2.5 / GPT Codex-5.3 / Claude Opus 4.6</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="tab-bar" id="tab-bar" style="display: none;">
+          <div class="tab-item active" onclick="switchTab('notes')">
+            <span class="tab-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><title>闪记</title><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </span>
+            <span>闪记</span>
+          </div>
+          <div class="tab-item" onclick="switchTab('collections')">
+            <span class="tab-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><title>合集</title><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+            </span>
+            <span>合集</span>
+          </div>
+          <div class="tab-item" onclick="switchTab('favorites')">
+            <span class="tab-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><title>收藏</title><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </span>
+            <span>收藏</span>
+          </div>
+          <div class="tab-item" onclick="switchTab('profile')">
+            <span class="tab-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><title>我的</title><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </span>
+            <span>我的</span>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  
+  <div class="modal" id="create-modal">
+    <div class="modal-content">
+      <div class="modal-title">新建闪记</div>
+      <div class="form-group">
+        <label class="form-label">闪记名称</label>
+        <input type="text" class="form-input" id="new-note-name" placeholder="请输入名称">
+      </div>
+      <div class="form-group">
+        <label class="form-label">选择头像</label>
+        <div class="avatar-grid" id="avatar-grid"></div>
+      </div>
+      <div class="modal-btns">
+        <button type="button" class="btn btn-secondary" onclick="hideCreateModal()">取消</button>
+        <button type="button" class="btn btn-primary" onclick="createNote()">创建</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Image Picker Modal -->
+  <div class="image-picker-modal" id="image-picker-modal">
+    <div class="image-picker-content">
+      <div class="image-picker-header">
+        <span class="image-picker-title">选择图片</span>
+        <span class="image-picker-close" onclick="closeImagePicker()">×</span>
+      </div>
+      <button type="button" class="image-picker-add" onclick="addMoreImages()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><title>添加图片</title><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        添加图片
+      </button>
+      <div class="image-preview-grid" id="image-preview-grid"></div>
+      <div class="image-picker-input-area">
+        <input type="text" class="image-picker-input" id="image-caption-input" placeholder="请输入消息...">
+        <button type="button" class="image-picker-send" id="image-send-btn" onclick="sendImagesWithCaption()" disabled>发送</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Hidden file input for multi-select -->
+  <input type="file" id="image-file-input" accept="image/*" multiple style="display: none;">
+  
+  <div class="toast" id="toast"></div>
+  
+  <script>
+    const avatars = ['💼', '📚', '❤️', '🍀', '🌟', '🎯', '🚀', '🎨', '🎵', '📷', '🍕', '⚽'];
+    
+    let state = {
+      currentUser: { name: '闪记用户', id: '10001', avatar: '😊' },
+      notes: [
+        { id: 1, name: '工作灵感', avatar: '💼', category: '工作相关', messages: [
+          { type: 'text', content: '今天的产品会议要点', sent: false, time: '09:00' },
+          { type: 'text', content: '1. 用户反馈需要优化搜索功能', sent: true, time: '09:05' },
+          { type: 'text', content: '2. 下周需要完成新版设计稿', sent: true, time: '09:06' }
+        ]},
+        { id: 2, name: '读书笔记', avatar: '📚', category: '学习笔记', messages: [
+          { type: 'text', content: '开始阅读《深度工作》', sent: true, time: '昨天' },
+          { type: 'text', content: '第三章：专注力是可以训练的', sent: true, time: '昨天' }
+        ]},
+        { id: 3, name: '生活小记', avatar: '❤️', category: '生活感悟', messages: [
+          { type: 'text', content: '周末计划去爬山', sent: true, time: '周一' }
+        ]},
+        { id: 4, name: '产品需求', avatar: '📋', category: '工作相关', messages: [
+          { type: 'text', content: '新版本功能规划', sent: true, time: '上周' }
+        ]},
+        { id: 5, name: '英语学习', avatar: '📖', category: '学习笔记', messages: [
+          { type: 'text', content: '每日单词打卡', sent: true, time: '昨天' }
+        ]},
+        { id: 6, name: '旅行计划', avatar: '✈️', category: '生活感悟', messages: [
+          { type: 'text', content: '暑假出行安排', sent: true, time: '上周' }
+        ]},
+        { id: 7, name: '随手记', avatar: '📝', messages: [
+          { type: 'text', content: '今天路边看到一只可爱的小猫', sent: true, time: '今天' }
+        ]},
+        { id: 8, name: 'Idea', avatar: '💡', messages: [
+          { type: 'text', content: '做一个个人笔记App', sent: true, time: '上周' }
+        ]}
+      ],
+      categories: [
+        { id: 1, name: '工作相关', icon: '💼', color: '#4A90D9' },
+        { id: 2, name: '学习笔记', icon: '📚', color: '#7B68EE' },
+        { id: 3, name: '生活感悟', icon: '❤️', color: '#FF6B6B' },
+        { id: 4, name: '创意灵感', icon: '💡', color: '#FFD93D' }
+      ],
+      favorites: [
+        { id: 1, date: '3月9日', type: 'text', content: '产品定位：采用聊天交互模式的轻量级灵感记录工具', source: '工作灵感', time: '14:30' },
+        { id: 2, date: '3月8日', type: 'text', content: '《深度工作》第三章核心观点：专注力是可以通过训练提升的', source: '读书笔记', time: '16:20' },
+        { id: 3, date: '3月7日', type: 'image', content: 'https://picsum.photos/seed/1/200/150', source: '生活小记', time: '10:20' },
+        { id: 4, date: '3月6日', type: 'video', content: 'https://picsum.photos/seed/2/200/150', source: '生活小记', time: '15:45' },
+        { id: 5, date: '3月5日', type: 'text', content: '周末爬山计划：选择香山，难度适中，适合初学者', source: '生活小记', time: '20:15' },
+        { id: 6, date: '3月4日', type: 'file', content: '{"name":"项目计划书.pdf","size":"2.3 MB"}', source: '工作灵感', time: '09:30' },
+        { id: 7, date: '3月3日', type: 'voice', content: '25', source: '读书笔记', time: '14:10' },
+        { id: 8, date: '3月2日', type: 'text', content: '技术选型：Vue3 + TypeScript + Vite', source: '工作灵感', time: '11:00' },
+        { id: 9, date: '3月1日', type: 'image', content: 'https://picsum.photos/seed/3/200/150', source: '工作灵感', time: '16:20' },
+        { id: 10, date: '2月28日', type: 'file', content: '{"name":"会议记录.docx","size":"156 KB"}', source: '工作灵感', time: '18:00' },
+        { id: 11, date: '2月27日', type: 'voice', content: '15', source: '生活小记', time: '21:30' },
+        { id: 12, date: '2月26日', type: 'video', content: 'https://picsum.photos/seed/4/200/150', source: '生活小记', time: '12:15' }
+      ],
+      currentNote: null
+    };
+    
+    let selectedAvatar = '💼';
+    let toolsVisible = false;
+    
+    function showPage(pageId) {
+      document.querySelectorAll('.page').forEach(p => {
+        p.classList.remove('active');
+      });
+      document.getElementById(pageId).classList.add('active');
+    }
+    
+    function showSplash() { showPage('splash'); }
+    function showLogin() { showPage('login'); updateServerDisplay(); }
+    function showRegister() { showPage('register'); }
+    
+    function showServerSettings() {
+      showPage('server-settings');
+      const customUrl = localStorage.getItem('customServerUrl');
+      if (customUrl) {
+        document.getElementById('custom-check').textContent = '✓';
+        document.getElementById('official-check').textContent = '';
+        showCustomServerInput();
+        document.getElementById('custom-server-url').value = customUrl;
+      } else {
+        selectOfficialServer();
+      }
+    }
+    
+    function showLoginFromSettings() {
+      showPage('login');
+      updateServerDisplay();
+    }
+    
+    function updateServerDisplay() {
+      const customUrl = localStorage.getItem('customServerUrl');
+      const display = document.getElementById('server-display');
+      if (customUrl) {
+        display.textContent = '🏠 自托管';
+      } else {
+        display.textContent = '☁️ 闪记服务器';
+      }
+    }
+    
+    function selectOfficialServer() {
+      document.getElementById('official-check').textContent = '✓';
+      document.getElementById('custom-check').textContent = '';
+      document.getElementById('custom-server-input').style.display = 'none';
+      document.getElementById('save-server-btn').style.display = 'none';
+    }
+    
+    function showCustomServerInput() {
+      document.getElementById('custom-check').textContent = '✓';
+      document.getElementById('official-check').textContent = '';
+      document.getElementById('custom-server-input').style.display = 'block';
+      document.getElementById('save-server-btn').style.display = 'block';
+    }
+    
+    function saveServerSettings() {
+      const isCustom = document.getElementById('custom-check').textContent === '✓';
+      if (isCustom) {
+        const url = document.getElementById('custom-server-url').value.trim();
+        if (!url) {
+          showToast('请输入服务器地址');
+          return;
+        }
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+          showToast('请输入正确的地址');
+          return;
+        }
+        localStorage.setItem('customServerUrl', url);
+      } else {
+        localStorage.removeItem('customServerUrl');
+      }
+      showToast('服务器已保存');
+      setTimeout(() => showLoginFromSettings(), 500);
+    }
+    function showNotes() { 
+      showPage('notes-page'); 
+      renderNotes();
+    }
+    
+    function showCollections() {
+      showPage('collections-page');
+      renderCollectionAllList();
+    }
+    
+    function renderNoteItem(note) {
+      const lastMsg = note.messages[note.messages.length - 1];
+      const time = lastMsg ? lastMsg.time : '';
+      return '<div class="collection-note-item" onclick="openChatFromCollection(' + note.id + ')">' +
+        '<div class="collection-note-avatar">' + note.avatar + '</div>' +
+        '<div class="collection-note-info">' +
+          '<div class="collection-note-name">' + note.name + '</div>' +
+          '<div class="collection-note-time">' + time + '</div>' +
+        '</div>' +
+      '</div>';
+    }
+    
+    function renderCollectionAllList() {
+      const list = document.getElementById('collection-all-list');
+      let html = '';
+      
+      state.categories.forEach(cat => {
+        const catNotes = state.notes.filter(n => n.category === cat.name);
+        if (catNotes.length > 0) {
+          html += '<div class="category-section">' +
+            '<div class="category-section-title">' + cat.icon + ' ' + cat.name + '</div>' +
+            catNotes.map(note => renderNoteItem(note)).join('') +
+          '</div>';
+        }
+      });
+      
+      const uncatNotes = state.notes.filter(n => !n.category);
+      if (uncatNotes.length > 0) {
+        html += '<div class="category-section">' +
+          '<div class="category-section-title">📋 未分类</div>' +
+          uncatNotes.map(note => renderNoteItem(note)).join('') +
+        '</div>';
+      }
+      
+      if (state.notes.length === 0) {
+        html += '<div class="empty-state"><div class="empty-icon">📝</div><div class="empty-text">还没有任何闪记</div></div>';
+      }
+      
+      list.innerHTML = html;
+    }
+    
+    function openChatFromCollection(noteId) {
+      document.getElementById('tab-bar').style.display = 'flex';
+      showChat(noteId);
+    }
+    
+    function showFavorites() {
+      showPage('favorites-page');
+      renderFavorites();
+    }
+    
+    function showProfile() {
+      showPage('profile-page');
+      initHeatmap();
+      document.getElementById('profile-avatar').textContent = state.currentUser.avatar;
+      document.getElementById('profile-name').textContent = state.currentUser.name;
+      document.getElementById('profile-id').textContent = 'ID: ' + state.currentUser.id;
+    }
+    
+    function showChat(noteId) {
+      state.currentNote = state.notes.find(n => n.id === noteId);
+      document.getElementById('chat-title').textContent = state.currentNote.name;
+      showPage('chat-page');
+      renderMessages();
+      toolsVisible = false;
+      document.getElementById('chat-tools').classList.remove('show');
+    }
+    
+    let selectedServer = 'official';
+    let serverSaved = false;
+    
+    function toggleServerDropdown() {
+      const dropdown = document.getElementById('server-dropdown');
+      dropdown.classList.toggle('show');
+    }
+    
+    function selectServerOption(type) {
+      const dropdown = document.getElementById('server-dropdown');
+      const urlGroup = document.getElementById('server-url-group');
+      dropdown.classList.remove('show');
+      
+      if (type === 'official') {
+        selectedServer = 'official';
+        serverSaved = false;
+        document.getElementById('server-display').textContent = '☁️ 闪记服务器';
+        urlGroup.classList.remove('show');
+      } else {
+        selectedServer = 'custom';
+        if (!serverSaved) {
+          urlGroup.classList.add('show');
+        }
+      }
+    }
+    
+    function handleServerChange(value) {
+      const urlGroup = document.getElementById('server-url-group');
+      if (value === 'custom') {
+        urlGroup.style.display = 'flex';
+      } else {
+        urlGroup.style.display = 'none';
+        serverSaved = false;
+      }
+    }
+    
+    function saveCustomServer() {
+      const url = document.getElementById('server-url').value.trim();
+      if (!url) {
+        showToast('请输入服务器地址');
+        return;
+      }
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        showToast('请输入正确的地址（以http://或https://开头）');
+        return;
+      }
+      serverSaved = true;
+      selectedServer = 'custom';
+      document.getElementById('server-display').textContent = '🏠 自托管';
+      document.getElementById('server-url-group').classList.remove('show');
+      showToast('服务器已保存');
+    }
+    
+    function doLogin() {
+      const email = document.getElementById('login-email').value.trim();
+      const pwd = document.getElementById('login-password').value;
+      if (!email || !pwd) { showToast('请填写完整信息'); return; }
+      showToast('登录成功');
+      setTimeout(() => {
+        document.getElementById('tab-bar').style.display = 'flex';
+        showNotes();
+      }, 500);
+    }
+    
+    function doRegister() {
+      const username = document.getElementById('reg-username').value.trim();
+      const email = document.getElementById('reg-email').value.trim();
+      const pwd = document.getElementById('reg-password').value;
+      if (!username || !email || !pwd) { showToast('请填写完整信息'); return; }
+      state.currentUser.name = username;
+      showToast('注册成功');
+      setTimeout(() => showLogin(), 500);
+    }
+    
+    function logout() {
+      showToast('已退出登录');
+      setTimeout(() => {
+        document.getElementById('tab-bar').style.display = 'none';
+        showLogin();
+      }, 500);
+    }
+    
+    let selectedNewAvatar = null;
+    
+    function showAvatarPage() {
+      const grid = document.getElementById('avatar-select-grid');
+      grid.innerHTML = avatars.map(a => 
+        '<div class="avatar-option' + (a === state.currentUser.avatar ? ' selected' : '') + '" onclick="selectNewAvatar(this, \'' + a + '\')">' + a + '</div>'
+      ).join('');
+      selectedNewAvatar = state.currentUser.avatar;
+      showPage('avatar-page');
+    }
+    
+    function selectNewAvatar(el, avatar) {
+      document.querySelectorAll('#avatar-select-grid .avatar-option').forEach(e => {
+        e.classList.remove('selected');
+      });
+      el.classList.add('selected');
+      selectedNewAvatar = avatar;
+    }
+    
+    function saveAvatar() {
+      if (selectedNewAvatar) {
+        state.currentUser.avatar = selectedNewAvatar;
+        document.getElementById('profile-avatar').textContent = selectedNewAvatar;
+        showProfile();
+        showToast('头像已更新');
+      }
+    }
+    
+    function showNicknamePage() {
+      document.getElementById('nickname-input').value = state.currentUser.name;
+      showPage('nickname-page');
+    }
+    
+    function saveNickname() {
+      const newName = document.getElementById('nickname-input').value.trim();
+      if (!newName) {
+        showToast('昵称不能为空');
+        return;
+      }
+      if (newName.length > 20) {
+        showToast('昵称不能超过20个字符');
+        return;
+      }
+      state.currentUser.name = newName;
+      document.getElementById('profile-name').textContent = newName;
+      showProfile();
+      showToast('昵称已更新');
+    }
+    
+    function showPasswordPage() {
+      document.getElementById('new-password').value = '';
+      document.getElementById('confirm-password').value = '';
+      showPage('password-page');
+    }
+    
+    function savePassword() {
+      const newPwd = document.getElementById('new-password').value;
+      const confirmPwd = document.getElementById('confirm-password').value;
+      
+      if (!newPwd || newPwd.length < 6) {
+        showToast('密码至少6位');
+        return;
+      }
+      if (newPwd !== confirmPwd) {
+        showToast('两次密码不一致');
+        return;
+      }
+      showProfile();
+      showToast('密码已修改');
+    }
+    
+    function showSettingsPage() {
+      showPage('settings-page');
+      document.getElementById('dark-mode-toggle').checked = localStorage.getItem('darkMode') === 'true';
+    }
+    
+    function toggleDarkMode() {
+      const isDark = document.getElementById('dark-mode-toggle').checked;
+      if (isDark) {
+        document.documentElement.classList.add('dark-mode');
+        localStorage.setItem('darkMode', 'true');
+      } else {
+        document.documentElement.classList.remove('dark-mode');
+        localStorage.setItem('darkMode', 'false');
+      }
+    }
+    
+    function loadDarkModePreference() {
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.documentElement.classList.add('dark-mode');
+        document.getElementById('dark-mode-toggle').checked = true;
+      }
+    }
+    
+    function showAboutPage() {
+      showPage('about-page');
+    }
+    
+    function showThanksPage() {
+      showPage('thanks-page');
+    }
+    
+    function confirmLogout() {
+      showToast('已退出登录');
+      setTimeout(() => {
+        document.getElementById('tab-bar').style.display = 'none';
+        showLogin();
+      }, 500);
+    }
+    
+    function renderNotes() {
+      const list = document.getElementById('notes-list');
+      if (state.notes.length === 0) {
+        list.innerHTML = '<div class="empty-state"><div class="empty-icon">📝</div><div class="empty-text">还没有闪记<br>点击右上角 + 创建第一个</div></div>';
+        return;
+      }
+      list.innerHTML = state.notes.map(note => {
+        const lastMsg = note.messages[note.messages.length - 1];
+        const preview = lastMsg ? (lastMsg.type === 'text' ? lastMsg.content : '[' + lastMsg.type + ']') : '暂无消息';
+        return '<div class="note-item" onclick="showChat(' + note.id + ')">' +
+          '<div class="note-avatar">' + note.avatar + '</div>' +
+          '<div class="note-info">' +
+            '<div class="note-name">' + note.name + '</div>' +
+            '<div class="note-preview">' + preview + '</div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+    
+    function renderMessages() {
+      const container = document.getElementById('chat-messages');
+      container.innerHTML = state.currentNote.messages.map(msg => {
+        const cls = msg.sent ? 'sent' : 'received';
+        const avatar = msg.sent ? state.currentUser.avatar : state.currentNote.avatar;
+        let content = '';
+        
+        if (msg.type === 'mixed') {
+          const gridClass = msg.images.length === 1 ? 'single' : 
+                            msg.images.length === 2 ? 'double' : 'multiple';
+          const imagesHtml = '<div class="msg-image-grid ' + gridClass + '">' +
+            msg.images.map(url => '<img src="' + url + '" class="msg-image">').join('') +
+            '</div>';
+          content = msg.content ? imagesHtml + '<div>' + msg.content + '</div>' : imagesHtml;
+        } else if (msg.type === 'image' || msg.type === 'video') {
+          content = '<img src="' + msg.content + '" class="msg-image">';
+        } else if (msg.type === 'voice') {
+          content = '<div class="msg-voice"><div class="voice-wave"><span></span><span></span><span></span><span></span></div><span>' + msg.content + '″</span></div>';
+        } else if (msg.type === 'file') {
+          const fileInfo = JSON.parse(msg.content);
+          content = '<div class="msg-file"><div class="msg-file-icon">📄</div><div class="msg-file-info"><div class="msg-file-name">' + fileInfo.name + '</div><div class="msg-file-size">' + fileInfo.size + '</div></div></div>';
+        } else {
+          content = msg.content;
+        }
+        
+        return '<div class="message ' + cls + '">' +
+          '<div class="msg-avatar">' + avatar + '</div>' +
+          '<div class="msg-content">' + content + '</div>' +
+        '</div>';
+      }).join('');
+      container.scrollTop = container.scrollHeight;
+    }
+    
+    function renderFavorites() {
+      const list = document.getElementById('favorites-list');
+      if (state.favorites.length === 0) {
+        list.innerHTML = '<div class="empty-state"><div class="empty-icon">⭐</div><div class="empty-text">还没有收藏<br>长按消息可收藏</div></div>';
+        return;
+      }
+      
+      const getFavContent = (fav) => {
+        if (fav.type === 'image' || fav.type === 'video') {
+          return '<img src="' + fav.content + '" class="timeline-media">';
+        } else if (fav.type === 'file') {
+          const fileInfo = JSON.parse(fav.content);
+          return '<div class="timeline-file"><div class="timeline-file-icon">📄</div><div class="timeline-file-info"><div class="timeline-file-name">' + fileInfo.name + '</div><div class="timeline-file-size">' + fileInfo.size + '</div></div></div>';
+        } else if (fav.type === 'voice') {
+          return '<div class="timeline-voice"><div class="voice-wave"><span></span><span></span><span></span><span></span></div><span>' + fav.content + '″</span></div>';
+        }
+        return '<div class="timeline-text">' + fav.content + '</div>';
+      };
+      
+      list.innerHTML = state.favorites.map(fav => 
+        '<div class="timeline-item">' +
+          '<div class="timeline-date">' + fav.date + ' ' + fav.time + '</div>' +
+          getFavContent(fav) +
+          '<div class="timeline-source">来自：' + fav.source + '</div>' +
+        '</div>'
+      ).join('');
+    }
+    
+    function sendMessage() {
+      const input = document.getElementById('chat-input');
+      const content = input.value.trim();
+      if (!content) return;
+      state.currentNote.messages.push({
+        type: 'text', content: content, sent: true,
+        time: new Date().toLocaleTimeString('zh-CN', {hour:'2-digit',minute:'2-digit'})
+      });
+      input.value = '';
+      renderMessages();
+    }
+    
+    let selectedImages = [];
+    
+    function sendImage() {
+      selectedImages = [];
+      document.getElementById('image-picker-modal').classList.add('show');
+      document.getElementById('image-preview-grid').innerHTML = '';
+      document.getElementById('image-caption-input').value = '';
+      document.getElementById('image-send-btn').disabled = true;
+      document.getElementById('image-file-input').click();
+      toggleTools();
+    }
+    
+    function initImagePicker() {
+      const fileInput = document.getElementById('image-file-input');
+      fileInput.addEventListener('change', handleImageSelect);
+    }
+    
+    function handleImageSelect(e) {
+      const files = Array.from(e.target.files);
+      files.forEach(file => {
+        if (file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = function(event) {
+            selectedImages.push({
+              data: event.target.result,
+              name: file.name
+            });
+            renderImagePreview();
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+      e.target.value = '';
+    }
+    
+    function renderImagePreview() {
+      const grid = document.getElementById('image-preview-grid');
+      const sendBtn = document.getElementById('image-send-btn');
+      
+      grid.innerHTML = selectedImages.map((img, index) => 
+        '<div class="image-preview-item">' +
+          '<img src="' + img.data + '" alt="' + img.name + '">' +
+          '<button class="image-preview-remove" onclick="removeSelectedImage(' + index + ')">×</button>' +
+        '</div>'
+      ).join('');
+      
+      sendBtn.disabled = selectedImages.length === 0;
+    }
+    
+    function removeSelectedImage(index) {
+      selectedImages.splice(index, 1);
+      renderImagePreview();
+    }
+    
+    function addMoreImages() {
+      document.getElementById('image-file-input').click();
+    }
+    
+    function closeImagePicker() {
+      document.getElementById('image-picker-modal').classList.remove('show');
+      selectedImages = [];
+    }
+    
+    function sendImagesWithCaption() {
+      if (selectedImages.length === 0) return;
+      
+      const caption = document.getElementById('image-caption-input').value.trim();
+      const imageUrls = selectedImages.map(img => img.data);
+      
+      state.currentNote.messages.push({
+        type: 'mixed',
+        images: imageUrls,
+        content: caption,
+        sent: true,
+        time: new Date().toLocaleTimeString('zh-CN', {hour:'2-digit',minute:'2-digit'})
+      });
+      
+      closeImagePicker();
+      renderMessages();
+    }
+    
+    function sendVideo() {
+      const seed = Math.floor(Math.random() * 1000) + 1000;
+      const imgData = 'https://picsum.photos/seed/' + seed + '/200/150';
+      state.currentNote.messages.push({
+        type: 'video', content: imgData, sent: true,
+        time: new Date().toLocaleTimeString('zh-CN', {hour:'2-digit',minute:'2-digit'})
+      });
+      renderMessages();
+      toggleTools();
+      showToast('视频已发送');
+    }
+    
+    function sendFile() {
+      const fileNames = ['文档.pdf', '报告.docx', '表格.xlsx', '资料.zip'];
+      const fileName = fileNames[Math.floor(Math.random() * fileNames.length)];
+      const fileSize = Math.floor(Math.random() * 5000) + 100 + ' KB';
+      state.currentNote.messages.push({
+        type: 'file', content: JSON.stringify({ name: fileName, size: fileSize }), sent: true,
+        time: new Date().toLocaleTimeString('zh-CN', {hour:'2-digit',minute:'2-digit'})
+      });
+      renderMessages();
+      toggleTools();
+    }
+    
+    let isRecording = false;
+    let voiceDuration = 0;
+    let voiceTimer = null;
+    
+    function startVoice() {
+      isRecording = true;
+      voiceDuration = 0;
+      const voiceBtn = document.getElementById('voice-btn');
+      const voicePanel = document.getElementById('voice-panel');
+      
+      voiceBtn.classList.add('recording');
+      voicePanel.classList.add('show');
+      
+      voiceTimer = setInterval(() => {
+        voiceDuration++;
+        document.querySelector('.voice-hint').textContent = '正在录音... ' + voiceDuration + '秒';
+      }, 1000);
+    }
+    
+    function endVoice() {
+      if (!isRecording) return;
+      
+      isRecording = false;
+      clearInterval(voiceTimer);
+      
+      const voiceBtn = document.getElementById('voice-btn');
+      voiceBtn.classList.remove('recording');
+      
+      if (voiceDuration < 1) {
+        cancelVoice();
+        return;
+      }
+    }
+    
+    function cancelVoice() {
+      isRecording = false;
+      clearInterval(voiceTimer);
+      voiceDuration = 0;
+      document.getElementById('voice-panel').classList.remove('show');
+      document.getElementById('voice-btn').classList.remove('recording');
+    }
+    
+    function sendVoiceConfirm() {
+      if (voiceDuration < 1) {
+        cancelVoice();
+        return;
+      }
+      
+      state.currentNote.messages.push({
+        type: 'voice', content: voiceDuration.toString(), sent: true,
+        time: new Date().toLocaleTimeString('zh-CN', {hour:'2-digit',minute:'2-digit'})
+      });
+      
+      cancelVoice();
+      renderMessages();
+      showToast('语音已发送 ' + voiceDuration + '秒');
+    }
+    
+    function sendVoice() {
+      const duration = Math.floor(Math.random() * 30) + 5;
+      state.currentNote.messages.push({
+        type: 'voice', content: duration.toString(), sent: true,
+        time: new Date().toLocaleTimeString('zh-CN', {hour:'2-digit',minute:'2-digit'})
+      });
+      renderMessages();
+      showToast('语音已发送 ' + duration + '秒');
+    }
+    
+    function handleChatKey(e) { if (e.key === 'Enter') sendMessage(); }
+    
+    function toggleTools() {
+      toolsVisible = !toolsVisible;
+      document.getElementById('chat-tools').classList.toggle('show', toolsVisible);
+    }
+    
+    function showChatOptions() {
+      showToast('功能开发中');
+    }
+    
+    function initAvatarGrid() {
+      const grid = document.getElementById('avatar-grid');
+      grid.innerHTML = avatars.map((a, i) => 
+        '<div class="avatar-option' + (i === 0 ? ' selected' : '') + '" onclick="selectAvatar(this, \'' + a + '\')">' + a + '</div>'
+      ).join('');
+    }
+    
+    function selectAvatar(el, avatar) {
+      document.querySelectorAll('.avatar-option').forEach(e => {
+        e.classList.remove('selected');
+      });
+      el.classList.add('selected');
+      selectedAvatar = avatar;
+    }
+    
+    function showCreateModal() {
+      document.getElementById('create-modal').classList.add('show');
+      document.getElementById('new-note-name').value = '';
+      initAvatarGrid();
+    }
+    
+    function hideCreateModal() { document.getElementById('create-modal').classList.remove('show'); }
+    
+    function createNote() {
+      const name = document.getElementById('new-note-name').value.trim();
+      if (!name) { showToast('请输入名称'); return; }
+      state.notes.unshift({ id: Date.now(), name: name, avatar: selectedAvatar, messages: [] });
+      hideCreateModal();
+      renderNotes();
+      showToast('创建成功');
+    }
+    
+    function initHeatmap() {
+      const grid = document.getElementById('heatmap');
+      const levels = [0, 1, 2, 3, 4];
+      grid.innerHTML = '';
+      for (let i = 0; i < 28; i++) {
+        const level = levels[Math.floor(Math.random() * levels.length)];
+        grid.innerHTML += '<div class="heatmap-day' + (level > 0 ? ' level-' + level : '') + '"></div>';
+      }
+    }
+    
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-item').forEach(t => {
+        t.classList.remove('active');
+      });
+      event.currentTarget.classList.add('active');
+      if (tab === 'notes') showNotes();
+      else if (tab === 'collections') showCollections();
+      else if (tab === 'favorites') showFavorites();
+      else if (tab === 'profile') showProfile();
+    }
+    
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 1500);
+    }
+    
+    initImagePicker();
+    loadDarkModePreference();
+    setTimeout(() => showLogin(), 1500);
+  </script>
+</body>
+</html>

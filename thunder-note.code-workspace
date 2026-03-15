@@ -1,0 +1,25 @@
+{
+	"folders": [
+		{
+			"name": "📂 Thunder Note",
+			"path": "."
+		},
+		{
+			"name": "🖥️ Server",
+			"path": "thunder-note-server"
+		},
+		{
+			"name": "📱 Android",
+			"path": "thunder-note-android"
+		}
+	],
+	"settings": {
+		"git.autoRepositoryDetection": true,
+		"git.detectSubmodules": false,
+		"git.repositoryScanMaxDepth": 1,
+		"files.exclude": {
+			"thunder-note-server": true,
+			"thunder-note-android": true
+		}
+	}
+}

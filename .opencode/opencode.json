@@ -1,0 +1,16 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "lsp": {
+    "kotlin-ls": {
+      "command": [
+        "/root/.local/share/opencode/bin/kotlin-ls/official/kotlin-lsp.sh",
+        "--stdio"
+      ],
+      "extensions": [
+        ".kt",
+        ".kts"
+      ],
+      "priority": 10
+    }
+  }
+}
