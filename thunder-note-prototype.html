@@ -2343,6 +2343,11 @@
         <label class="form-label">选择头像</label>
         <div class="avatar-grid" id="avatar-grid"></div>
       </div>
+      <div class="form-group">
+        <label class="form-label">加入合集</label>
+        <input type="text" class="form-input" id="new-note-category" list="category-options" placeholder="可选择已有合集或输入新合集">
+        <datalist id="category-options"></datalist>
+      </div>
       <div class="modal-btns">
         <button type="button" class="btn btn-secondary" onclick="hideCreateModal()">取消</button>
         <button type="button" class="btn btn-primary" onclick="createNote()">创建</button>
@@ -3070,15 +3075,38 @@
     function showCreateModal() {
       document.getElementById('create-modal').classList.add('show');
       document.getElementById('new-note-name').value = '';
+      document.getElementById('new-note-category').value = '';
       initAvatarGrid();
+      refreshCategoryOptions();
     }
     
     function hideCreateModal() { document.getElementById('create-modal').classList.remove('show'); }
     
+    function refreshCategoryOptions() {
+      const options = document.getElementById('category-options');
+      options.innerHTML = state.categories.map(category =>
+        '<option value="' + category.name + '"></option>'
+      ).join('');
+    }
+
+    function ensureCategory(name) {
+      if (!name) return;
+      const exists = state.categories.some(category => category.name === name);
+      if (exists) return;
+      state.categories.push({
+        id: Date.now(),
+        name: name,
+        icon: '📁',
+        color: '#4A90D9'
+      });
+    }
+
     function createNote() {
       const name = document.getElementById('new-note-name').value.trim();
+      const category = document.getElementById('new-note-category').value.trim();
       if (!name) { showToast('请输入名称'); return; }
-      state.notes.unshift({ id: Date.now(), name: name, avatar: selectedAvatar, messages: [] });
+      ensureCategory(category);
+      state.notes.unshift({ id: Date.now(), name: name, avatar: selectedAvatar, category: category || undefined, messages: [] });
       hideCreateModal();
       renderNotes();
       showToast('创建成功');
