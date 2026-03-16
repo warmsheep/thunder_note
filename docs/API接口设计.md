@@ -112,6 +112,21 @@
 - 需要认证
 - 返回当前用户的闪记列表
 
+#### POST `/api/flash-notes/search`
+- 需要认证
+- 搜索闪记及其关联消息
+- 请求体：
+```json
+{
+  "query": "搜索关键词"
+}
+```
+- 响应 `data` 为 `List<FlashNoteSearchResult>`，每个结果包含：
+  - `flashNote`：匹配的闪记对象
+  - `matchedMessages`：匹配的消息列表（`List<MatchedMessageInfo>`），每个包含：
+    - `messageId`：消息ID
+    - `snippet`：消息内容摘要
+
 #### POST `/api/flash-notes`
 - 需要认证
 - 当前请求体直接提交 `FlashNote` 实体形态
@@ -221,6 +236,7 @@
 | 方法 | 路径 | 说明 |
 |------|------|------|
 | POST | `/api/flash-notes/list` | 获取闪记列表 |
+| POST | `/api/flash-notes/search` | 搜索闪记及消息 |
 | POST | `/api/flash-notes` | 创建闪记 |
 | PUT | `/api/flash-notes/{id}` | 更新闪记 |
 | DELETE | `/api/flash-notes/{id}` | 删除闪记 |
