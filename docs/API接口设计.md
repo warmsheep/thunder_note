@@ -144,6 +144,12 @@
 - 当前使用 SSE
 - 用于接收服务端推送的消息事件
 
+#### DELETE `/api/messages/{id}`
+- 需要认证
+- 删除指定ID的消息
+- 只能删除自己发送的消息或收到的消息
+- 返回 `data = null`
+
 ### 合集
 
 #### POST `/api/collections/list`
@@ -225,6 +231,7 @@
 | POST | `/api/messages/list` | 获取消息列表 |
 | POST | `/api/messages` | 发送基础消息 |
 | GET | `/api/messages/stream` | SSE 消息流 |
+| DELETE | `/api/messages/{id}` | 删除消息 |
 
 ### 合集
 | 方法 | 路径 | 说明 |
