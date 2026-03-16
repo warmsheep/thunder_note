@@ -115,10 +115,13 @@
 #### POST `/api/flash-notes`
 - 需要认证
 - 当前请求体直接提交 `FlashNote` 实体形态
+- 当前 `FlashNote` 额外包含 `icon` 字段；Android 当前创建流只要求图标 + 名称，`content` 允许为空
+- 当前 MVP 约定 `tags` 承接单一合集/分类名称
 
 #### PUT `/api/flash-notes/{id}`
 - 需要认证
 - 当前请求体直接提交 `FlashNote` 实体形态
+- 当前 Android 编辑闪记时，同步更新图标、名称与合集归属
 
 #### DELETE `/api/flash-notes/{id}`
 - 需要认证
@@ -134,6 +137,7 @@
 - 需要认证
 - 当前请求体直接提交 `Message` 实体形态
 - 当前后端消息模型核心字段是 `receiverId`、`content`，并已补 `flashNoteId`、`role` 用于 Android 闪记内对话
+- 当前 Android 聊天页成功发送后才清空输入框；失败时保留输入并提示错误
 
 #### GET `/api/messages/stream`
 - 需要认证
@@ -145,10 +149,13 @@
 #### POST `/api/collections/list`
 - 需要认证
 - 返回当前用户的合集列表
+- 当前 Android/原型把合集视为“分类目录”；默认展示时会结合 `flash_notes.tags` 组织为“合集 - 闪记”层级
 
 #### POST / PUT / DELETE `/api/collections`
 - 需要认证
 - 当前请求体直接提交 `Collection` 实体形态
+- 当前 `Collection.description` 仍保留在后端实体中，但 Android 主流程不再把“标题 + 描述”作为合集创建入口
+- 当前后端在重命名合集时，会同步改写使用该合集名的 `flash_notes.tags`；删除合集时，会把这些闪记归属清空为未分类
 
 ### 文件
 
