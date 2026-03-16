@@ -14,6 +14,9 @@
 - Android auth / flashnote repository 测试已补齐
 - HTML 原型迭代
 
+## UI 样式优化待办
+- [ ] 底部导航图标选中时不变色（已尝试 colorControlNormal 未生效，需进一步排查）
+
 ## MVP 阶段（已完成 ✅）
 
 ### A0-A7 全部完成
