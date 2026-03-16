@@ -1,7 +1,7 @@
 # 项目知识库
 
 **生成时间：** 2026-03-13 Asia/Shanghai
-**仓库状态：** 当前工作区不是 git 仓库
+**仓库状态：** 根目录是 git 仓库，`thunder-note-server/` 与 `thunder-note-android/` 也各自是独立 git 子仓库
 
 ## 项目概览
 Thunder Note（闪记）当前是"已实现代码 + 目标态规划 + 原型探索"混合仓库。真实代码以 Spring Boot 后端和 Android Java 客户端为主，同时保留大量中文设计文档与一个大型 HTML 原型。
@@ -58,6 +58,8 @@ thunder_note/
 - 当前 Java 客户端里，`auth`、`flashnote`、`chat` 已有可编译主链；`collection`、`favorite`、`profile` 仍偏占位壳层。
 - 判断 Android 是否为真实实现还是桩实现时，优先检查 repository 是否有真实网络调用、是否只返回内存数据或占位数据。
 - 遇到 Android 相关任务时，优先区分：当前 Java 客户端事实、未来待补能力。
+- git 提交时，根仓只提交文档、原型、脚本和规则类改动；`thunder-note-server/`、`thunder-note-android/` 的代码改动必须进入各自子仓库单独提交。
+- 不要在根仓用 `git add -f` 把子仓代码快照纳入提交；若误纳入，必须在根仓回退索引并改为在子仓提交。
 
 ## 反模式
 - 不要把路线图文档当作"模块已经存在"的证据。
@@ -73,6 +75,7 @@ thunder_note/
 - 处理 Android 任务时，必须先区分：当前 Java 客户端已实现部分、当前 Java 客户端占位部分；不能混写成一个统一成熟状态。
 - 处理视觉/产品问题时，先看原型与 `docs/页面设计规范.md`，再确认当前代码是否真的实现。
 - 如果一个判断会影响接口、数据结构或跨端行为，至少同时核对文档与一处真实代码入口。
+- 遇到跨根仓 + 子仓的 git 操作时，先判断变更归属：文档/原型走根仓，后端代码走 `thunder-note-server/`，Android 代码走 `thunder-note-android/`；必要时三个仓分别提交。
 
 ## 阶段开发原则
 - 默认按 `docs/完整开发计划.md` 的阶段顺序推进：MVP → 增强版 → 完整项目 → 远期扩展。
