@@ -1,2 +1,0 @@
-ALTER TABLE flash_notes
-    ADD COLUMN IF NOT EXISTS icon VARCHAR(16);
