@@ -165,6 +165,11 @@
 - 只能删除自己发送的消息或收到的消息
 - 返回 `data = null`
 
+#### GET `/api/messages/count`
+- 需要认证
+- 返回当前用户所有消息的总数
+- 返回 `data` 为 `Long` 类型
+
 ### 合集
 
 #### POST `/api/collections/list`
@@ -184,7 +189,7 @@
 - 需要认证
 - 上传方式：`multipart/form-data`
 - 表单字段：`file`
-- 当前服务端配置大小限制：单文件 20MB，请求总大小 20MB
+- 当前服务端配置大小限制：单文件 500MB，请求总大小 500MB
 
 #### GET `/api/files/download?objectName=...`
 - 当前以 `objectName` 查询参数指定文件对象
