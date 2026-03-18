@@ -106,18 +106,52 @@
 #### PUT `/api/users/profile`
 - 需要认证
 - 当前请求体直接提交 `UserProfile` 对象
+- 当前支持更新 `bio`，并支持通过 `nickname` 回写到 `users.nickname`
 
 #### GET `/api/users/contacts`
 - 需要认证
-- 返回当前可对话联系人列表（当前实现为“除自己外的启用用户列表”）
+- 返回当前已添加好友的联系人列表（`friend_relations.status=ACCEPTED`）
 - 响应 `data` 为 `List<ContactUserDto>`，字段：`userId`、`username`、`nickname`、`avatar`
+
+#### GET `/api/users/contacts/requests`
+- 需要认证
+- 返回当前用户收到的待处理好友请求列表
+
+#### GET `/api/users/contacts/requests/count`
+- 需要认证
+- 返回当前用户待处理好友请求数
+
+#### POST `/api/users/contacts/request`
+- 需要认证
+- 请求体：`{ "targetUserId": 123 }`
+- 发起好友请求（幂等：已是好友/已发请求时不重复创建）
+
+#### POST `/api/users/contacts/request/accept`
+- 需要认证
+- 请求体：`{ "requestId": 456 }`
+- 接受好友请求
+
+#### POST `/api/users/contacts/request/reject`
+- 需要认证
+- 请求体：`{ "requestId": 456 }`
+- 拒绝好友请求
+
+#### DELETE `/api/users/contacts/{contactUserId}`
+- 需要认证
+- 删除联系人关系（幂等）
+
+#### GET `/api/users/contacts/search?keyword=...`
+- 需要认证
+- 搜索用户并返回关系状态：`NONE` / `FRIEND` / `PENDING_SENT` / `PENDING_RECEIVED`
 
 ### 闪记
 
 #### POST `/api/flash-notes/list`
 - 需要认证
 - 返回当前用户的闪记列表
+- 当前列表首位固定返回“收集箱”虚拟闪记（`id=-1`，默认置顶）
 - 当前响应中的 `FlashNote` 额外返回 `latestMessage`（后端按该闪记最新一条消息聚合；媒体类型返回 `[图片]/[视频]/[语音]/[文件]` 占位）
+- 当前响应中的 `FlashNote` 包含扩展状态：`pinned` / `hidden` / `inbox`
 
 #### POST `/api/flash-notes/search`
 - 需要认证
@@ -145,6 +179,18 @@
 - 当前请求体直接提交 `FlashNote` 实体形态
 - 当前 Android 编辑闪记时，同步更新图标、名称与合集归属
 - 当前后端支持将 `tags` 更新为 `null`（用于“移出合集/未分类”）
+- `id=-1`（收集箱）不允许编辑
+
+#### PUT `/api/flash-notes/{id}/pin?value=true|false`
+- 需要认证
+- 设置或取消置顶
+- `id=-1`（收集箱）不允许取消置顶
+
+#### PUT `/api/flash-notes/{id}/hide?value=true|false`
+- 需要认证
+- 设置或取消隐藏
+- 当 `value=true` 时会自动取消置顶
+- `id=-1`（收集箱）不允许隐藏
 
 #### DELETE `/api/flash-notes/{id}`
 - 需要认证
@@ -157,12 +203,15 @@
 - 当前支持通过请求体可选字段 `flashNoteId` 拉取某条闪记下的消息列表
 - 当前支持通过请求体可选字段 `peerUserId` 拉取与某个联系人之间的双向会话列表
 - 当同时提供 `flashNoteId` 与 `peerUserId` 时，优先按 `flashNoteId` 过滤
+- 当前支持 `flashNoteId=-1` 拉取“收集箱”消息
+- 当 `flashNoteId=-1`（收集箱）时，后端会额外约束 `senderId=当前用户` 且 `receiverId=当前用户`，避免跨用户串读
 
 #### POST `/api/messages`
 - 需要认证
 - 当前请求体直接提交 `Message` 实体形态
 - 当前后端消息模型核心字段是 `receiverId`、`content`，并已补 `flashNoteId`、`role` 用于 Android 闪记内对话
 - 当前联系人会话发送时，`flashNoteId` 可为空，`receiverId` 指向联系人用户ID
+- 当前支持发送到 `flashNoteId=-1`（收集箱）
 - 当前 Android 聊天页成功发送后才清空输入框；失败时保留输入并提示错误
 
 #### GET `/api/messages/stream`
@@ -248,6 +297,13 @@
 | POST | `/api/users/profile` | 获取个人资料 |
 | PUT | `/api/users/profile` | 更新个人资料 |
 | GET | `/api/users/contacts` | 获取联系人列表 |
+| GET | `/api/users/contacts/requests` | 获取待处理好友请求 |
+| GET | `/api/users/contacts/requests/count` | 获取待处理好友请求数 |
+| POST | `/api/users/contacts/request` | 发起好友请求 |
+| POST | `/api/users/contacts/request/accept` | 接受好友请求 |
+| POST | `/api/users/contacts/request/reject` | 拒绝好友请求 |
+| DELETE | `/api/users/contacts/{contactUserId}` | 删除联系人 |
+| GET | `/api/users/contacts/search` | 搜索用户并返回关系状态 |
 
 ### 闪记
 | 方法 | 路径 | 说明 |
@@ -256,6 +312,8 @@
 | POST | `/api/flash-notes/search` | 搜索闪记及消息 |
 | POST | `/api/flash-notes` | 创建闪记 |
 | PUT | `/api/flash-notes/{id}` | 更新闪记 |
+| PUT | `/api/flash-notes/{id}/pin` | 置顶/取消置顶 |
+| PUT | `/api/flash-notes/{id}/hide` | 隐藏/取消隐藏 |
 | DELETE | `/api/flash-notes/{id}` | 删除闪记 |
 
 ### 消息
@@ -300,7 +358,6 @@
 - 搜索接口
 - 系统健康与系统信息接口（文档级设计）
 - 多媒体消息细分接口（text/image/audio/video/file/mixed）
-- 闪记 hide / restore / pin / unpin 等扩展操作
 
 ## 历史漂移说明
 - 旧文档中的 `/api/v1/...` 全部视为过时路径
