@@ -111,6 +111,7 @@
 #### POST `/api/flash-notes/list`
 - 需要认证
 - 返回当前用户的闪记列表
+- 当前响应中的 `FlashNote` 额外返回 `latestMessage`（后端按该闪记最新一条消息聚合；媒体类型返回 `[图片]/[视频]/[语音]/[文件]` 占位）
 
 #### POST `/api/flash-notes/search`
 - 需要认证
@@ -137,6 +138,7 @@
 - 需要认证
 - 当前请求体直接提交 `FlashNote` 实体形态
 - 当前 Android 编辑闪记时，同步更新图标、名称与合集归属
+- 当前后端支持将 `tags` 更新为 `null`（用于“移出合集/未分类”）
 
 #### DELETE `/api/flash-notes/{id}`
 - 需要认证
