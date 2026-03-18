@@ -91,6 +91,7 @@
 #### POST `/api/auth/refresh?refreshToken=...`
 - 当前真实实现使用 `query param`，不是 JSON body
 - 成功返回结构与登录相同
+- 当前后端会校验“绝对会话时长”上限（30天）；超过上限需重新登录
 
 #### POST `/api/auth/logout`
 - 当前通过请求头中的 `Authorization` 退出登录
@@ -105,6 +106,11 @@
 #### PUT `/api/users/profile`
 - 需要认证
 - 当前请求体直接提交 `UserProfile` 对象
+
+#### GET `/api/users/contacts`
+- 需要认证
+- 返回当前可对话联系人列表（当前实现为“除自己外的启用用户列表”）
+- 响应 `data` 为 `List<ContactUserDto>`，字段：`userId`、`username`、`nickname`、`avatar`
 
 ### 闪记
 
@@ -149,11 +155,14 @@
 #### POST `/api/messages/list`
 - 需要认证
 - 当前支持通过请求体可选字段 `flashNoteId` 拉取某条闪记下的消息列表
+- 当前支持通过请求体可选字段 `peerUserId` 拉取与某个联系人之间的双向会话列表
+- 当同时提供 `flashNoteId` 与 `peerUserId` 时，优先按 `flashNoteId` 过滤
 
 #### POST `/api/messages`
 - 需要认证
 - 当前请求体直接提交 `Message` 实体形态
 - 当前后端消息模型核心字段是 `receiverId`、`content`，并已补 `flashNoteId`、`role` 用于 Android 闪记内对话
+- 当前联系人会话发送时，`flashNoteId` 可为空，`receiverId` 指向联系人用户ID
 - 当前 Android 聊天页成功发送后才清空输入框；失败时保留输入并提示错误
 
 #### GET `/api/messages/stream`
@@ -238,6 +247,7 @@
 |------|------|------|
 | POST | `/api/users/profile` | 获取个人资料 |
 | PUT | `/api/users/profile` | 更新个人资料 |
+| GET | `/api/users/contacts` | 获取联系人列表 |
 
 ### 闪记
 | 方法 | 路径 | 说明 |
