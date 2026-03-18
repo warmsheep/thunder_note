@@ -157,19 +157,26 @@
 
 #### POST `/api/flash-notes/search`
 - 需要认证
-- 搜索闪记及其关联消息
+- 搜索闪记及其关联消息，返回两个独立列表避免重复
 - 请求体：
 ```json
 {
   "query": "搜索关键词"
 }
 ```
-- 响应 `data` 为 `List<FlashNoteSearchResult>`，每个结果包含：
-  - `flashNote`：匹配的闪记对象
-  - `noteMatched`：是否命中闪记标题/正文层级；用于客户端决定是否展示在“闪记”分组
-  - `matchedMessages`：匹配的消息列表（`List<MatchedMessageInfo>`），每个包含：
-    - `messageId`：消息ID
-    - `snippet`：消息内容摘要
+- 响应 `data` 为 `FlashNoteSearchResponse`，包含两个独立列表：
+  - `noteNameMatched`（`List<FlashNoteSearchResult>`）：命中闪记标题/正文的搜索结果
+    - 每个结果包含：
+      - `flashNote`：匹配的闪记对象
+      - `noteMatched`：始终为 `true`
+      - `matchedMessages`：匹配的消息列表（`List<MatchedMessageInfo>`），每个包含：
+        - `messageId`：消息ID
+        - `snippet`：消息内容摘要
+  - `messageContentMatched`（`List<FlashNoteSearchResult>`）：仅命中消息内容的搜索结果
+    - 每个结果包含：
+      - `flashNote`：匹配的闪记对象
+      - `noteMatched`：始终为 `false`
+      - `matchedMessages`：匹配的消息列表（`List<MatchedMessageInfo>`）
 
 #### POST `/api/flash-notes`
 - 需要认证
