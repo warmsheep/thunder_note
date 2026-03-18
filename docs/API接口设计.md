@@ -106,12 +106,14 @@
 #### PUT `/api/users/profile`
 - 需要认证
 - 当前请求体直接提交 `UserProfile` 对象
-- 当前支持更新 `bio`，并支持通过 `nickname` 回写到 `users.nickname`
+- 当前支持更新 `bio`，并支持通过 `nickname` / `avatar` 回写到 `users` 表对应字段
 
 #### GET `/api/users/contacts`
 - 需要认证
-- 返回当前已添加好友的联系人列表（`friend_relations.status=ACCEPTED`）
-- 响应 `data` 为 `List<ContactUserDto>`，字段：`userId`、`username`、`nickname`、`avatar`
+- 返回联系人列表，并额外包含“我已发起、等待对方同意”的挂起联系人（`friend_relations.status=PENDING` 且 `requesterId=当前用户`）
+- 响应 `data` 为 `List<ContactUserDto>`，字段：`userId`、`username`、`nickname`、`avatar`、`relationStatus`、`latestMessage`
+- `relationStatus` 当前取值：`FRIEND` / `PENDING_SENT`
+- `latestMessage` 为当前联系人会话最新一条消息预览；媒体类型统一返回 `[图片]/[视频]/[语音]/[文件]` 占位
 
 #### GET `/api/users/contacts/requests`
 - 需要认证
@@ -164,6 +166,7 @@
 ```
 - 响应 `data` 为 `List<FlashNoteSearchResult>`，每个结果包含：
   - `flashNote`：匹配的闪记对象
+  - `noteMatched`：是否命中闪记标题/正文层级；用于客户端决定是否展示在“闪记”分组
   - `matchedMessages`：匹配的消息列表（`List<MatchedMessageInfo>`），每个包含：
     - `messageId`：消息ID
     - `snippet`：消息内容摘要
@@ -259,6 +262,7 @@
 #### POST `/api/favorites/list`
 - 需要认证
 - 当前返回当前用户的已收藏消息列表
+- 当收藏消息属于收集箱（`flashNoteId=-1`）时，当前会额外返回 `flashNoteTitle=收集箱`、`flashNoteIcon=📥`
 
 #### POST `/api/favorites/{messageId}`
 - 需要认证
