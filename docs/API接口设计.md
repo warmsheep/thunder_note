@@ -112,7 +112,7 @@
 - 需要认证
 - 返回联系人列表，并额外包含“我已发起、等待对方同意”的挂起联系人（`friend_relations.status=PENDING` 且 `requesterId=当前用户`）
 - 响应 `data` 为 `List<ContactUserDto>`，字段：`userId`、`username`、`nickname`、`avatar`、`relationStatus`、`latestMessage`
-- `relationStatus` 当前取值：`FRIEND` / `PENDING_SENT`
+- `relationStatus` 当前取值：`FRIEND` / `PENDING_SENT` / `PENDING_RECEIVED`
 - `latestMessage` 为当前联系人会话最新一条消息预览；媒体类型统一返回 `[图片]/[视频]/[语音]/[文件]` 占位
 
 #### GET `/api/users/contacts/requests`
@@ -136,11 +136,15 @@
 #### POST `/api/users/contacts/request/reject`
 - 需要认证
 - 请求体：`{ "requestId": 456 }`
-- 拒绝好友请求
+- 拒绝好友请求（接收方操作，将关系标记为 REJECTED）
+
+#### DELETE `/api/users/contacts/request/{requestId}`
+- 需要认证
+- 取消已发送的好友申请（发送方操作，直接删除 pending 记录）
 
 #### DELETE `/api/users/contacts/{contactUserId}`
 - 需要认证
-- 删除联系人关系（幂等）
+- 删除联系人关系或取消好友申请（对 FRIEND / PENDING 状态均生效，幂等）
 
 #### GET `/api/users/contacts/search?keyword=...`
 - 需要认证
@@ -313,7 +317,8 @@
 | POST | `/api/users/contacts/request` | 发起好友请求 |
 | POST | `/api/users/contacts/request/accept` | 接受好友请求 |
 | POST | `/api/users/contacts/request/reject` | 拒绝好友请求 |
-| DELETE | `/api/users/contacts/{contactUserId}` | 删除联系人 |
+| DELETE | `/api/users/contacts/request/{requestId}` | 取消好友申请 |
+| DELETE | `/api/users/contacts/{contactUserId}` | 删除联系人/取消申请 |
 | GET | `/api/users/contacts/search` | 搜索用户并返回关系状态 |
 
 ### 闪记
