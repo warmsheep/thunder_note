@@ -223,10 +223,33 @@
 #### POST `/api/messages`
 - 需要认证
 - 当前请求体直接提交 `Message` 实体形态
+- 支持发送普通消息及复合结构消息(如：多图文/多视频卡片)
 - 当前后端消息模型核心字段是 `receiverId`、`content`，并已补 `flashNoteId`、`role` 用于 Android 闪记内对话
 - 当前联系人会话发送时，`flashNoteId` 可为空，`receiverId` 指向联系人用户ID
 - 当前支持发送到 `flashNoteId=-1`（收集箱）
+- 当前复合卡片消息可直接通过该接口发送：`mediaType=COMPOSITE`，`content/fileName` 承接卡片标题，`payload` 承接卡片结构（标题、summary、items）
+- 当前 Android 端已通过独立卡片编辑页生成三类卡片：单/多图片+文字、单/多视频+文字、单/多文件+文字；同一卡片内附件需为同一类型，最多 9 个
 - 当前 Android 聊天页成功发送后才清空输入框；失败时保留输入并提示错误
+
+#### POST `/api/messages/merge`
+- 需要认证
+- 当前已实现：用于将同一闪记或同一联系人会话中的多条消息打包合并成一条复合卡片消息
+- 请求体：
+```json
+{
+  "title": "卡片标题（必填）",
+  "messageIds": [1, 2, 3],
+  "flashNoteId": 123,
+  "receiverId": 456
+}
+```
+- 约束：
+  - `title` 必填
+  - `messageIds` 不能为空，且最多 50 条
+  - `flashNoteId` / `receiverId` 至少提供一个
+  - 所选消息必须属于当前用户可访问的同一会话
+- 后端逻辑：根据 `messageIds` 查出所有原消息内容，按请求顺序组装成深拷贝 JSON 结构，并生成一条新的 `mediaType=COMPOSITE` 消息存入数据库；当前 `payload` 会按 PostgreSQL `jsonb` 正确写入。
+- 当前默认行为：生成一条新的卡片消息，原消息保留，不做删除。
 
 #### GET `/api/messages/stream`
 - 需要认证
