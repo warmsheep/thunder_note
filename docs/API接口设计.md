@@ -260,7 +260,29 @@
 - 需要认证
 - 删除指定ID的消息
 - 只能删除自己发送的消息或收到的消息
+- 删除时会同步清理该消息关联的 `mediaUrl` / `thumbnailUrl`，以及复合卡片中 `originalMsgId == null` 的独立媒体对象
 - 返回 `data = null`
+
+#### POST `/api/messages/delete-batch`
+- 需要认证
+- 当前已实现：批量删除消息
+- 请求体：
+```json
+{
+  "ids": [1, 2, 3]
+}
+```
+- 约束：
+  - `ids` 不能为空
+  - 一次最多 50 条
+  - 所有消息都必须属于当前用户可访问的会话，否则整批拒绝
+- 删除成功后会同步清理关联媒体对象
+
+#### DELETE `/api/messages/clear-inbox`
+- 需要认证
+- 当前已实现：清空收集箱（`flashNoteId=-1`）里的所有消息，但**不删除收集箱实体本身**
+- 服务端会额外约束 `senderId=当前用户` 且 `receiverId=当前用户`
+- 删除成功后会同步清理收集箱消息及其关联媒体对象
 
 #### GET `/api/messages/count`
 - 需要认证
@@ -287,6 +309,7 @@
 - 上传方式：`multipart/form-data`
 - 表单字段：`file`
 - 当前服务端配置大小限制：单文件 500MB，请求总大小 500MB
+- 当前 Android 图片/视频发送链路会额外上传一份缩略图文件，并将对象名写入 `messages.thumbnailUrl`
 
 #### GET `/api/files/download?objectName=...`
 - 当前以 `objectName` 查询参数指定文件对象
