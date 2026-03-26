@@ -88,8 +88,14 @@
 
 成功响应：`data = null`
 
-#### POST `/api/auth/refresh?refreshToken=...`
-- 当前真实实现使用 `query param`，不是 JSON body
+#### POST `/api/auth/refresh`
+- 当前真实实现已改为 **JSON body**，不再通过 URL query 传 refresh token
+- 请求体：
+```json
+{
+  "refreshToken": "refresh-token-string"
+}
+```
 - 成功返回结构与登录相同
 - 当前后端会校验“绝对会话时长”上限（30天）；超过上限需重新登录
 
@@ -349,7 +355,7 @@
 |------|------|------|
 | POST | `/api/auth/login` | 用户名 + 密码登录 |
 | POST | `/api/auth/register` | 注册 |
-| POST | `/api/auth/refresh?refreshToken=...` | 刷新 token |
+| POST | `/api/auth/refresh` | 刷新 token（JSON body: `{ "refreshToken": "..." }`） |
 | POST | `/api/auth/logout` | 登出 |
 
 ### 用户
