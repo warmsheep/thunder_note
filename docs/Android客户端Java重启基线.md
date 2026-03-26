@@ -28,9 +28,9 @@
 | chat/message | 真实主链 | `app/src/main/java/com/flashnote/java/data/repository/MessageRepositoryImpl.java`、`app/src/main/java/com/flashnote/java/ui/chat/` | 已按 `flashNoteId` 拉取并发送基础文本消息 |
 | collection | 真实主链 | `app/src/main/java/com/flashnote/java/data/repository/CollectionRepositoryImpl.java`、`app/src/main/java/com/flashnote/java/ui/main/CollectionTabFragment.java` | 已接合集列表、创建、编辑、删除 |
 | favorite | 真实主链 | `app/src/main/java/com/flashnote/java/data/repository/FavoriteRepositoryImpl.java`、`app/src/main/java/com/flashnote/java/ui/main/FavoriteTabFragment.java` | 已接消息收藏列表、移除、从收藏跳转回聊天 |
-| profile | 部分实现 | `app/src/main/java/com/flashnote/java/ui/main/ProfileTabFragment.java`、`app/src/main/java/com/flashnote/java/data/repository/UserRepositoryImpl.java` | 已接资料查询/更新、手动 sync/file/logout 入口，但仍是操作台式页面 |
-| sync | MVP 最小闭环 | `app/src/main/java/com/flashnote/java/data/repository/SyncRepositoryImpl.java` | 已接 `bootstrap / pull / push`，仍未进入完整离线队列体系 |
-| file | MVP 最小闭环 | `app/src/main/java/com/flashnote/java/data/repository/FileRepositoryImpl.java` | 已接上传并回读下载 |
+| profile | 部分实现 | `app/src/main/java/com/flashnote/java/ui/main/ProfileTabFragment.java`、`app/src/main/java/com/flashnote/java/data/repository/UserRepositoryImpl.java` | 已接资料查询/更新、头像区右上角同步入口、设置页日志查看、退出登录，但仍是操作台式页面 |
+| sync | MVP 最小闭环 | `app/src/main/java/com/flashnote/java/data/repository/SyncRepositoryImpl.java` | 已接 `pullAndRefreshLocal / syncAll / 本地真源 push`，支持待同步数量展示，仍未进入完整离线冲突解决体系 |
+| file | 真实基础能力（非独立调试页） | `app/src/main/java/com/flashnote/java/data/repository/FileRepositoryImpl.java` | 上传/下载能力仍服务于头像、聊天媒体等主链，但已不再保留单独文件调试页面 |
 
 ## 当前页面与导航范围快照（2026-03-16 代码核对）
 - 应用入口：`MainActivity` 首次进入打开 `SplashFragment`。
@@ -39,7 +39,8 @@
 - 主壳流：`MainShellFragment` 维护四个底部 Tab：`FlashNoteTabFragment`、`CollectionTabFragment`、`FavoriteTabFragment`、`ProfileTabFragment`。
 - 内容流：`FlashNoteTabFragment` 支持新建/编辑/删除闪记，并通过 `ShellNavigator.openChat()` 进入 `ChatFragment`。
 - 收藏流：`FavoriteTabFragment` 可基于已收藏消息重新打开关联闪记聊天。
-- 个人中心流：`ProfileTabFragment` 支持刷新资料、编辑 bio、手动触发 `bootstrap/pull/push`、文件上传回读、退出登录。
+- 个人中心流：`ProfileTabFragment` 支持刷新资料、编辑个人资料、头部右上角一键同步、退出登录。
+- 设置流：`SettingsFragment` 当前可进入独立日志查看页，不再从“我的”页保留调试工具入口。
 
 ## 必须继承的后端事实
 - 后端 API 当前真实路径为 `/api/...`，不是 `/api/v1/...`
@@ -58,7 +59,7 @@
 - Android 当前主链没有把 Room、离线待同步队列、`syncStatus / localUpdatedAt / lastSyncVersion` 拉回主线。
 - MVP 阶段仍不支持 `pinned / hidden`，不要把旧模型里的扩展字段当成当前必备能力。
 - Profile 当前只暴露 bio 与操作入口，未形成完整个人中心信息编辑体系。
-- Sync `push` 当前上传的是内存中的 `notes / collections / messages / favorites` 快照，不等于完整操作日志同步协议。
+- Sync 当前已改为从本地真源表收集 `notes / collections / messages / favorites` 做 `syncAll()` 推送，不再允许从内存 LiveData 快照直接拼 payload；但这仍不等于完整操作日志同步协议。
 - 当前聊天上传中的“本地立即可见”能力还不是完整本地持久化 outbox，只是过渡态；在专项重构完成前，不要把它当成稳定的离线优先能力。
 
 ## 必须保留的产品与页面范围
