@@ -103,6 +103,41 @@
 - 当前通过请求头中的 `Authorization` 退出登录
 - 成功响应：`data = null`
 
+#### PUT `/api/auth/password`
+- 需要认证
+- 当前用于修改登录密码，不承担手势锁设置职责
+- 请求体：
+```json
+{
+  "currentPassword": "old-password",
+  "newPassword": "new-password"
+}
+```
+
+#### PUT `/api/auth/gesture-lock`
+- 需要认证
+- 当前用于备份手势锁密文材料；**不参与 Android 本地启动解锁判定**
+- 当前服务端仅保存密文相关字段，不保存明文手势
+- 请求体：
+```json
+{
+  "ciphertext": "gesture-material",
+  "nonce": "local-only",
+  "kdfParams": "sha256",
+  "version": "v1"
+}
+```
+- 成功响应：`data = null`
+
+#### GET `/api/auth/gesture-lock`
+- 需要认证
+- 返回当前用户是否已存在手势锁密文备份，以及版本/更新时间元信息
+
+#### DELETE `/api/auth/gesture-lock`
+- 需要认证
+- 清除当前用户的手势锁密文备份
+- 成功响应：`data = null`
+
 ### 用户
 
 #### POST `/api/users/profile`
