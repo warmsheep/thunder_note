@@ -6,19 +6,23 @@
 ## 当前状态结论
 - 当前仓库内的 `thunder-note-android/` 是 **Java 客户端主模块**。
 - 当前 Java 客户端已具备：Splash / Login / Register / Main / FlashNote / Chat 主壳层，并可完成独立构建。
-- 当前 Java 客户端尚未完整补齐：完整 Profile 真实业务内容、Room 主链、本地离线闭环；Collection、Favorite、最小 Sync 已接入真实链路。
+- 当前 Java 客户端的 `auth / flashnote / chat / collection / favorite / profile` 已不再是简单壳层：主链 repository、页面和本地表/同步入口均已接通当前真实实现。
+- 当前尚未彻底完成的部分，重点不在“页面壳层”，而在：
+  - 数据流与离线架构的继续收口（尤其 sync、恢复链、生命周期边界）；
+  - `profile` 从操作台式页面继续收敛为更清晰的个人中心结构；
+  - 工程治理项，如错误处理、资源化、重复模板抽取、测试补强。
+- 后续 Android 开发默认先看 `docs/完整开发计划.md` 的 **3.5.8 Android 剩余可执行 backlog**，再决定本次会话认领哪一条任务。
 
-## 当前架构风险提醒（2026-03-23 复核）
-- 当前 `chat/message` 与 `flashnote list` 链路已经暴露出**数据流层架构缺陷**，不是单点 UI 小 bug：
-  - 聊天消息与上传状态仍大量依赖内存 `LiveData + HashMap`；
-  - 会话重绑时存在“先清空列表再拉远端”的实现；
-  - 闪记列表刷新仍与 Fragment / ViewModel 生命周期强绑定；
-  - 当前 sync/file 仅是 MVP 最小闭环，不能误判为完整离线优先架构。
-- 因此，后续新会话如果碰到以下问题：
-  - 上传中状态丢失
-  - 聊天页空白
-  - 闪记列表闲置重复请求
-  不应只做零散补丁，必须先查看 `docs/完整开发计划.md` 中 **3.5 Android 聊天 / 上传 / 闪记列表数据流重构专项**。
+## 当前风险提醒
+- Android 当前已不是“聊天空白 / 假数据壳层”阶段，P0/P1/P2 核心骨架已经落地。
+- 当前剩余风险主要在：
+  - sync payload 与后台恢复链继续收口；
+  - `state-saved` / 异步 UI 回调边界继续统一；
+  - `profile` 从操作台式页面继续收敛；
+  - 恢复链真机补证与测试矩阵继续补强。
+- 后续 Android 会话默认先看：
+  - `docs/完整开发计划.md` 的 **3.5.7 Android 代码审查整改专项**
+  - `docs/完整开发计划.md` 的 **3.5.8 Android 剩余可执行 backlog**
 
 ## 当前模块成熟度快照（2026-03-16 代码核对）
 | 模块 | 成熟度 | 代码依据 | 备注 |
@@ -55,12 +59,12 @@
 - `MessageController` 当前 MVP 主链使用 `POST /api/messages/list` 与 `POST /api/messages`；`GET /api/messages/stream` 已存在于后端，但 Android 当前 MVP 未接入 SSE。
 - `CollectionController`、`FileController`、`SyncController`、`FavoriteController` 当前真实路径均已在 Android `data/remote/` 中接通。
 
-## 当前本地临时语义与不应误判为主线字段
-- Android 当前主链没有把 Room、离线待同步队列、`syncStatus / localUpdatedAt / lastSyncVersion` 拉回主线。
-- MVP 阶段仍不支持 `pinned / hidden`，不要把旧模型里的扩展字段当成当前必备能力。
-- Profile 当前只暴露 bio 与操作入口，未形成完整个人中心信息编辑体系。
-- Sync 当前已改为从本地真源表收集 `notes / collections / messages / favorites` 做 `syncAll()` 推送，不再允许从内存 LiveData 快照直接拼 payload；但这仍不等于完整操作日志同步协议。
-- 当前聊天上传中的“本地立即可见”能力还不是完整本地持久化 outbox，只是过渡态；在专项重构完成前，不要把它当成稳定的离线优先能力。
+## 当前边界与仍未完成项
+- Room 已进入 `flashnote / message / favorite / collection / pending` 主链，但这不等于完整离线协议已经完成。
+- `syncAll()` 已改为从本地真源表收集 payload；剩余问题在 payload 继续收口、Worker 恢复补证与失败语义统一。
+- `PendingRecoveryWorker` 与 `pullAndRefreshLocal()` 已形成最小后台恢复链；剩余问题在跨重启真机补证与更完整的恢复/推送语义。
+- `profile` 已具备真实资料、同步、头像、设置入口，但仍偏“操作台式页面”，后续继续收敛结构即可。
+- MVP 阶段不应把旧模型里的所有扩展字段都当成当前必备能力；当前事实以真实 repository / Room / worker 主链为准。
 
 ## 必须保留的产品与页面范围
 - 登录 / 注册 / Splash / 主界面
@@ -75,6 +79,7 @@
 - `SyncRepositoryImpl` 已接真实接口，但当前仍以手动触发和最小 payload 为主
 - 历史上 `CollectionViewModel`、`FavoriteViewModel` 曾存在假数据依赖；当前主线已切到真实后端仓储
 - 页面存在不等于业务接通，判断成熟度要看 repository / API / DTO / 真实返回值
+- 当前剩余重构的重心已从“壳层接通”转向“数据流收口 + 生命周期稳定性 + 工程治理”，不要再默认把 `collection / favorite / profile` 误判成未接通页面。
 
 ## Java 客户端默认原则
 - 先以后端当前真实接口和文档为准建立 DTO 和 repository
@@ -83,28 +88,15 @@
 - 先区分真实链路与占位能力，避免再次出现"页面在但业务未通"的误判
 - 如果进入聊天 / 上传 / 闪记列表专项治理，优先执行 `完整开发计划.md` 的 P0 → P1 → P2 顺序，禁止跳阶段直接叠加复杂 sync 逻辑
 
-## 推荐的 Java 客户端技术基线
+## 当前技术基线
 - Android 语言：Java
 - UI：XML + ViewBinding
 - 页面组织：Activity / Fragment + Navigation
 - UI 状态：ViewModel + LiveData
 - 网络：Retrofit + OkHttp
-- 本地存储：Room（仅在最小链路稳定后再接入）
+- 本地存储：Room（当前主链已接入）
 - Token 持久化：加密存储
 - DI：优先选"团队易理解、易调试"的方案
-
-## 当前不提前锁死的技术决策
-- 是否使用 Hilt，还是手动 DI
-- 是否在第一阶段就引入 Room，还是先跑纯远程闭环
-- 是否在第一阶段就接入同步/离线队列
-
-## 推荐的 Java 起步顺序
-1. 建立 Android Java 工程基础骨架
-2. 建立认证最小闭环：登录、注册、登出、token 持久化
-3. 建立闪记最小闭环：列表、创建、更新、删除
-4. 建立基础消息链路
-5. 建立合集基础能力
-6. 最后再决定文件、同步、本地缓存等增强能力如何接入
 
 ## 启动前必读文档
 - `docs/完整开发计划.md`
