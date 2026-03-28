@@ -13,135 +13,176 @@
 
 ## 1. 安全修复（高优先级）
 
-### 🔴 TODO-1: application.yml 密钥迁移到环境变量
+### 🔴 TODO-1: application.yml 密钥迁移到环境变量 ✅
+（见 Round 1）
+
+---
+
+### 🔴 TODO-2: CORS 配置改为白名单模式 ✅
+（见 Round 1）
+
+---
+
+### 🟡 TODO-3: UserController.updateAvatar 输入校验 ✅
+（见 Round 1）
+
+---
+
+### 🟡 TODO-4: SyncController/SyncServiceImpl 强类型 DTO ✅
+（见 Round 1）
+
+---
+
+### 🟡 TODO-5: Actuator 端点暴露限制 ✅
+（见 Round 1）
+
+---
+
+### 🔴 TODO-R3-1: 扩展限流覆盖 register 和 refresh 接口 ✅ **Round 3 新增**
 **风险等级**：高
-**问题**：`application.yml` 中明文硬编码数据库密码、JWT 密钥、MinIO 凭证
+**问题**：`RateLimitInterceptor` 仅覆盖 `/api/auth/login`，注册和刷新令牌接口无保护
 **操作**：
-- [x] 将 `spring.datasource.password` 改为 `${DB_PASSWORD:postgres}`
-- [x] 将 `security.jwt.secret` 改为 `${JWT_SECRET}`（保留本地开发默认值，生产需设置 env var）
-- [x] 将 `minio.accessKey` 改为 `${MINIO_ACCESS_KEY:minioadmin}`
-- [x] 将 `minio.secretKey` 改为 `${MINIO_SECRET_KEY:minioadmin}`
-- [x] 创建 `.env.example` 文件作为模板
-- [x] 在 `application.yml` 中添加注释说明必需的环境变量
-- [x] 更新 `.env.example` 补充数据库连接配置说明
-
-**⚠️ 注意事项**：环境变量会覆盖 `application.yml` 默认值。**所有环境变量统一使用 `NOTE_` 前缀**避免与其他项目冲突。启动前确认与实际运行环境匹配。本地 docker 容器启动参考：
-```bash
-NOTE_DB_HOST=172.17.0.1 NOTE_DB_PORT=15432 NOTE_DB_PASSWORD=postgres mvn spring-boot:run
-```
+- [x] 将限流路径扩展至 Set.of("/api/auth/login", "/api/auth/register", "/api/auth/refresh")
+- [x] Redis key 从 `ratelimit:login:ip` 改为 `ratelimit:auth:ip`
+- [x] WebConfig 注册所有 3 个路径
 
 **涉及文件**：
-- `src/main/resources/application.yml`
-- 新建 `.env.example`
+- `common/ratelimit/RateLimitInterceptor.java`
+- `common/config/WebConfig.java`
 
 ---
 
-### 🔴 TODO-2: CORS 配置改为白名单模式
+### 🔴 TODO-R3-2: 文件上传大小和类型校验 ✅ **Round 3 新增**
 **风险等级**：高
-**问题**：`allowedOriginPatterns(List.of("*"))` + `allowCredentials(true)` 组合在生产环境存在风险
+**问题**：`FileServiceImpl.upload()` 无文件大小和类型限制，可上传任意大小和类型的文件
 **操作**：
-- [ ] 将 `allowedOriginPatterns` 改为从环境变量读取：`${CORS_ORIGINS:http://localhost:*}`
-- [ ] 生产环境配置实际域名列表（支持多域名逗号分隔）
-- [ ] 添加注释说明本地开发与生产配置方式
+- [x] 新增 MAX_FILE_SIZE = 10MB 常量
+- [x] 新增 ALLOWED_TYPES 白名单：image/jpeg, image/png, image/gif, image/webp, video/mp4, audio/mpeg, audio/mp4, application/pdf
+- [x] 上传前校验，超限抛 BAD_REQUEST
 
 **涉及文件**：
-- `src/main/java/com/flashnote/common/config/CorsConfig.java`
-- `src/main/resources/application.yml`
+- `file/service/impl/FileServiceImpl.java`
 
 ---
 
-### 🟡 TODO-3: UserController.updateAvatar 输入校验
-**风险等级**：中
-**问题**：`@RequestBody Map<String, String>` 无任何校验，存在 SSRF 风险
+### 🔴 TODO-R3-3: 文件下载路径遍历修复 ✅ **Round 3 新增**
+**风险等级**：高
+**问题**：`normalizeObjectName()` 不拒绝 `../` 序列，可构造路径遍历请求
 **操作**：
-- [ ] 创建 `AvatarUpdateRequest` DTO，添加 `@URL` 和 `@Size(max=2048)` 校验
-- [ ] 替换 `Map<String, String>` 为 `AvatarUpdateRequest`
-- [ ] 添加头像 URL 域名白名单校验（可选，先做基础校验）
+- [x] 新增 `containsTraversal()` 方法，URL 解码后拒绝含 `..` 的路径
+- [x] 下载和删除操作均经过校验，非法路径抛 BAD_REQUEST
 
 **涉及文件**：
-- 新建 `user/dto/AvatarUpdateRequest.java`
-- `user/controller/UserController.java`
-
----
-
-### 🟡 TODO-4: SyncController/SyncServiceImpl 强类型 DTO
-**风险等级**：中
-**问题**：`Map<String, Object>` 牺牲类型安全，难以维护
-**操作**：
-- [ ] 创建 `SyncPushRequest` 包含 `List<NotePushDto>`、`List<CollectionPushDto>`、`List<MessagePushDto>`、`List<FavoritePushDto>`
-- [ ] 创建 `NotePushDto`、`CollectionPushDto`、`MessagePushDto`、`FavoritePushDto` 内部类或独立文件
-- [ ] 将 `SyncServiceImpl.push()` 参数从 `Map<String, Object>` 改为 `SyncPushRequest`
-- [ ] 将 `SyncController` 的 `Map<String, Object>` 改为 `SyncPushRequest` 并加 `@Valid`
-- [ ] 移除 `SyncServiceImpl` 中手动的 `instanceof Number` 类型检查，改用 Jackson 绑定
-- [ ] 删除 `processFavorites` 中的 `DuplicateKeyException ignored` 无日志问题
-
-**涉及文件**：
-- 新建 `sync/dto/SyncPushRequest.java`
-- `sync/controller/SyncController.java`
-- `sync/service/SyncService.java`
-- `sync/service/impl/SyncServiceImpl.java`
-
----
-
-### 🟡 TODO-5: Actuator 端点暴露限制
-**风险等级**：中
-**问题**：`/actuator/env`、`/actuator/beans` 等可能泄露敏感信息
-**操作**：
-- [ ] 在 `application.yml` 中限制 actuator 暴露端点：`management.endpoints.web.exposure.include=health,info`
-- [ ] 对敏感端点添加角色限制（可选）
-
-**涉及文件**：
-- `src/main/resources/application.yml`
+- `file/service/impl/FileServiceImpl.java`
 
 ---
 
 ## 2. 代码质量重构（中优先级）
 
 ### 🟢 TODO-6: Lombok 引入并重构实体类 ✅
-**决定**：采用**方案B**（引入 Lombok 并使用）
-**操作**：所有实体类重构为 `@Getter @Setter`（MyBatis-Plus 实体避免 `@Data` 防止 equals/hashCode/toString 触发懒加载），CardItem/CardPayload 用 `@Data`
-**重构文件**：User, Collection, FavoriteMessage, FlashNote, UserProfile, FriendRelation, Message, CardItem, CardPayload（共9个）
+（见 Round 1）
 
 ---
 
-### 🟢 TODO-7: MessageServiceImpl 分页改为 IPage
-**问题**：`.last("LIMIT X OFFSET Y")` 绕过 MyBatis-Plus 分页插件，风格不统一
-**操作**：
-- [ ] 在 `MessageServiceImpl` 中引入 `com.baomidou.mybatisplus.extension.plugins.pagination.Page`
-- [ ] 将 `listMessages` 方法改为使用 `Page<Message>` 分页
-- [ ] 移除手动的 `offset` 计算和 `.last()` 调用
-- [ ] 检查其他 service 是否有类似问题
-
-**涉及文件**：
-- `message/service/MessageService.java` — 接口返回类型改为 `IPage<Message>`
-- `message/service/impl/MessageServiceImpl.java` — 移除手动 `LIMIT/OFFSET`，改用 `Page<Message>` + `selectPage()`
-- `message/controller/MessageController.java` — 响应类型改为 `ApiResponse<IPage<Message>>`
+### 🟢 TODO-7: MessageServiceImpl 分页改为 IPage ✅
+（见 Round 1）
 
 ---
 
-### 🟢 TODO-8: 异常吞掉问题修复
-**问题**：`catch (DuplicateKeyException ignored)` 和 `catch (Exception ignored)` 无任何日志
+### 🟢 TODO-8: 异常吞掉问题修复 ✅
+（见 Round 1）
+
+---
+
+### 🟢 TODO-R3-4: CollectionServiceImpl N+1 查询优化 ✅ **Round 3 新增**
+**风险等级**：高
+**问题**：`cascadeRename` 和 `cascadeClear` 先 SELECT 全量数据，再循环逐条 UPDATE（经典 N+1）
 **操作**：
-- [ ] 在 `FavoriteServiceImpl` 的 `DuplicateKeyException` catch 中添加 `log.debug(...)`
-- [ ] 在 `SyncServiceImpl` 的 `DuplicateKeyException` catch 中添加 `log.debug(...)`
-- [ ] 在 `FileController` 的 `catch (Exception ignored)` 中添加 `log.warn(...)`（文件操作失败至少要记录）
+- [x] `cascadeRename` → `flashNoteMapper.update(null, LambdaUpdateWrapper)` 单条 SQL 批量更新
+- [x] `cascadeClear` → 同上，将 tags 置为 null
 
 **涉及文件**：
+- `collection/service/impl/CollectionServiceImpl.java`
+
+---
+
+### 🟢 TODO-R3-5: .last("LIMIT") 反模式修复 ✅ **Round 3 新增**
+**风险等级**：中
+**问题**：多处使用 `.last("LIMIT X")` 绕过 MyBatis-Plus 分页 API
+**操作**：
+- [x] `FlashNoteServiceImpl.getMessageContext`：`.last("LIMIT 3")` → `selectPage(Page<>(1,3))`
+- [x] `FlashNoteServiceImpl.latestInboxMessage`：`.last("LIMIT 1")` → `selectOne`
+- [x] `UserServiceImpl.findLatestConversationMessage`：`.last("LIMIT 1")` → `selectOne`
+- [x] `UserServiceImpl.searchUsers`：`.last("LIMIT 30")` → `selectPage(Page<>(1,30))`
+- [x] `UserServiceImpl.findPair`：移除冗余 `.last("LIMIT 1")`（selectOne 内部保证）
+
+**涉及文件**：
+- `flashnote/service/impl/FlashNoteServiceImpl.java`
+- `user/service/impl/UserServiceImpl.java`
+
+---
+
+### 🟢 TODO-R3-6: COLLECTION_BOX_NOTE_ID 常量集中化 ✅ **Round 3 新增**
+**风险等级**：中
+**问题**：`COLLECTION_BOX_NOTE_ID = -1L` 在 3 个 service 中各有定义
+**操作**：
+- [x] 新建 `common/constant/NoteConstants`，包含 `COLLECTION_BOX_NOTE_ID`、`COLLECTION_BOX_TITLE`、`COLLECTION_BOX_ICON`
+- [x] `FlashNoteServiceImpl`、`MessageServiceImpl`、`FavoriteServiceImpl` 全部引用 `NoteConstants`
+
+**涉及文件**：
+- 新建 `common/constant/NoteConstants.java`
+- `flashnote/service/impl/FlashNoteServiceImpl.java`
+- `message/service/impl/MessageServiceImpl.java`
 - `favorite/service/impl/FavoriteServiceImpl.java`
-- `sync/service/impl/SyncServiceImpl.java`
-- `file/controller/FileController.java`
+
+---
+
+### 🟢 TODO-R3-7: CurrentUserService 统一用户查询 ✅ **Round 3 新增**
+**风险等级**：中
+**问题**：`getRequiredUserId()` 和 `getRequiredUser()` 在 5 个 service 中完全相同
+**操作**：
+- [x] 新建 `common/service/CurrentUserService`，提供 `getRequiredUserId(username)` 和 `getRequiredUser(username)` 方法
+- [x] `FlashNoteServiceImpl`、`MessageServiceImpl`、`FavoriteServiceImpl`、`CollectionServiceImpl`、`FileServiceImpl`、`UserServiceImpl` 全部注入并使用
+
+**涉及文件**：
+- 新建 `common/service/CurrentUserService.java`
+- `flashnote/service/impl/FlashNoteServiceImpl.java`
+- `message/service/impl/MessageServiceImpl.java`
+- `favorite/service/impl/FavoriteServiceImpl.java`
+- `collection/service/impl/CollectionServiceImpl.java`
+- `file/service/impl/FileServiceImpl.java`
+- `user/service/impl/UserServiceImpl.java`
+
+---
+
+### 🟢 TODO-R3-8: MediaType 枚举统一媒体类型显示 ✅ **Round 3 新增**
+**风险等级**：低
+**问题**：`[图片]`、`[视频]`、`[语音]` 等显示文本逻辑在 3 个 service 中重复
+**操作**：
+- [x] 新建 `common/constant/MediaType` 枚举，包含 TEXT/IMAGE/VIDEO/VOICE/FILE/COMPOSITE 及 displayText
+- [x] `FlashNoteServiceImpl.resolveLatestMessage()` → `MediaType.resolveDisplay()`
+- [x] `UserServiceImpl.resolveLatestMessage()` → `MediaType.resolveDisplay()`
+- [x] `MessageServiceImpl.sendMessage()` switch → `MediaType.resolveDisplay()`
+
+**涉及文件**：
+- 新建 `common/constant/MediaType.java`
+- `flashnote/service/impl/FlashNoteServiceImpl.java`
+- `user/service/impl/UserServiceImpl.java`
+- `message/service/impl/MessageServiceImpl.java`
 
 ---
 
 ## 3. 依赖更新（低优先级）
 
-### 🔵 TODO-9: 依赖版本检查与更新
+### 🔵 TODO-9: 依赖版本检查与更新 ✅
+（见 Round 1）
+
+---
+
+### 🔵 TODO-R3-9: dependency-check-maven 插件 ✅ **Round 3 新增**
 **操作**：
-- [ ] 运行 `mvn versions:display-dependency-updates` 扫描可更新版本
-- [ ] 检查 Spring Boot 3.2.x 最新 patch
-- [ ] 检查 MyBatis-Plus 3.5.x 最新版本
-- [ ] 检查 MinIO SDK 最新版本（与 server 版本匹配）
-- [ ] 可选：引入 `springdoc-openapi-starter-webmvc-ui` 生成 API 文档
+- [x] 在 `pom.xml` 新增 `org.owasp:dependency-check-maven:9.2.0`
+- [x] `failBuildOnAnyVulnerability=false`（报告模式）
 
 **涉及文件**：
 - `pom.xml`
@@ -161,7 +202,27 @@ NOTE_DB_HOST=172.17.0.1 NOTE_DB_PORT=15432 NOTE_DB_PASSWORD=postgres mvn spring-
 | TODO-7 | ✅ 已完成 | Sisyphus | 2026-03-28 | MessageServiceImpl 分页改为 MyBatis-Plus IPage |
 | TODO-8 | ✅ 已完成 | Sisyphus | 2026-03-28 | 异常日志修复（DuplicateKeyException + MIME 解析） |
 | TODO-9 | ✅ 已完成 | Sisyphus | 2026-03-28 | Spring Boot 3.2.6→3.2.12, MinIO 8.5.11→8.5.17 |
+| TODO-R3-1 | ✅ 已完成 | Sisyphus | 2026-03-29 | 扩展限流覆盖注册和刷新接口 |
+| TODO-R3-2 | ✅ 已完成 | Sisyphus | 2026-03-29 | 文件上传大小和类型白名单校验 |
+| TODO-R3-3 | ✅ 已完成 | Sisyphus | 2026-03-29 | 修复文件下载路径遍历漏洞 |
+| TODO-R3-4 | ✅ 已完成 | Sisyphus | 2026-03-29 | CollectionServiceImpl N+1 查询优化（批量 UPDATE） |
+| TODO-R3-5 | ✅ 已完成 | Sisyphus | 2026-03-29 | 替换 .last(LIMIT) 反模式为标准分页 API |
+| TODO-R3-6 | ✅ 已完成 | Sisyphus | 2026-03-29 | 集中 COLLECTION_BOX_NOTE_ID 常量到 NoteConstants |
+| TODO-R3-7 | ✅ 已完成 | Sisyphus | 2026-03-29 | 统一用户查询到 CurrentUserService |
+| TODO-R3-8 | ✅ 已完成 | Sisyphus | 2026-03-29 | 统一媒体类型显示到 MediaType 枚举 |
+| TODO-R3-9 | ✅ 已完成 | Sisyphus | 2026-03-29 | 新增 dependency-check-maven 漏洞扫描插件 |
 
 ---
 
-*最后更新：2026-03-28*
+## 5. 遗留项（Round 4 及以后）
+
+| 任务 | 优先级 | 说明 |
+|------|--------|------|
+| Entity → DTO 响应改造 | Medium | FlashNote/Message/Collection/UserProfile 控制器直接返回实体，需创建响应 DTO；需 Android 客户端协调 |
+| FileService 单元测试 | Low | 新增上传校验和路径安全测试 |
+| UserService 单元测试 | Low | 补充 searchUsers 等方法测试 |
+| 媒体类型枚举扩展 | Low | 支持更多媒体类型（GIF/WebP 等） |
+
+---
+
+*最后更新：2026-03-29*
