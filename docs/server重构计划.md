@@ -189,7 +189,70 @@
 
 ---
 
-## 4. 执行记录
+## 4. Round 4 执行项
+
+### 🟢 TODO-R4-1: Controller 响应 DTO 化 ✅ **Round 4 新增**
+**风险等级**：中
+**问题**：`FlashNoteController`、`MessageController`、`CollectionController`、`UserController` 仍直接返回实体对象，API 契约与数据库实体耦合。
+**操作**：
+- [x] 新增 `FlashNoteResponse`、`FlashNoteSearchResponseData`、`FlashNoteSearchResultResponse`、`MatchedMessageInfoResponse`
+- [x] 新增 `MessageResponse`
+- [x] 新增 `CollectionResponse`
+- [x] 新增 `UserProfileResponse`
+- [x] 在 4 个 controller 内完成 entity → DTO 映射，避免改动 service 接口签名，降低回归面
+
+**涉及文件**：
+- 新建 `flashnote/dto/FlashNoteResponse.java`
+- 新建 `flashnote/dto/FlashNoteSearchResponseData.java`
+- 新建 `flashnote/dto/FlashNoteSearchResultResponse.java`
+- 新建 `flashnote/dto/MatchedMessageInfoResponse.java`
+- 新建 `message/dto/MessageResponse.java`
+- 新建 `collection/dto/CollectionResponse.java`
+- 新建 `user/dto/UserProfileResponse.java`
+- `flashnote/controller/FlashNoteController.java`
+- `message/controller/MessageController.java`
+- `collection/controller/CollectionController.java`
+- `user/controller/UserController.java`
+
+---
+
+### 🟢 TODO-R4-2: FileService 单元测试 ✅ **Round 4 新增**
+**风险等级**：低
+**问题**：Round 3 新增的上传校验与路径安全逻辑没有测试保护。
+**操作**：
+- [x] 新增 `FileServiceImplTest`
+- [x] 覆盖上传成功、超限文件、非法类型、下载失败映射、空对象删除、合法删除、路径遍历拒绝等场景
+
+**涉及文件**：
+- 新建 `src/test/java/com/flashnote/file/FileServiceImplTest.java`
+
+---
+
+### 🟢 TODO-R4-3: UserService 单元测试 ✅ **Round 4 新增**
+**风险等级**：低
+**问题**：`UserServiceImpl` 之前没有任何测试，联系人、资料、搜索等逻辑缺少回归保护。
+**操作**：
+- [x] 新增 `UserServiceImplTest`
+- [x] 覆盖 `getProfile`、`updateProfile`、`searchUsers`、`listContacts`、`sendFriendRequest`、`countPendingRequests`、`cancelFriendRequest` 等关键路径
+
+**涉及文件**：
+- 新建 `src/test/java/com/flashnote/user/UserServiceImplTest.java`
+
+---
+
+### 🟢 TODO-R4-4: MediaType 扩展 gif/webp ✅ **Round 4 新增**
+**风险等级**：低
+**问题**：文件白名单已允许 `image/gif` 和 `image/webp`，但 `MediaType` 枚举未覆盖对应展示语义。
+**操作**：
+- [x] 在 `MediaType` 中新增 `GIF` 和 `WEBP`
+- [x] 两者统一展示为 `[图片]`
+
+**涉及文件**：
+- `common/constant/MediaType.java`
+
+---
+
+## 5. 执行记录
 
 | TODO | 状态 | 执行人 | 完成日期 | 备注 |
 |------|------|--------|----------|------|
@@ -211,18 +274,21 @@
 | TODO-R3-7 | ✅ 已完成 | Sisyphus | 2026-03-29 | 统一用户查询到 CurrentUserService |
 | TODO-R3-8 | ✅ 已完成 | Sisyphus | 2026-03-29 | 统一媒体类型显示到 MediaType 枚举 |
 | TODO-R3-9 | ✅ 已完成 | Sisyphus | 2026-03-29 | 新增 dependency-check-maven 漏洞扫描插件 |
+| TODO-R4-1 | ✅ 已完成 | Sisyphus | 2026-03-29 | 4 个 controller 响应 DTO 化，映射下沉到 controller 层 |
+| TODO-R4-2 | ✅ 已完成 | Sisyphus | 2026-03-29 | 新增 FileServiceImplTest，覆盖上传与路径安全逻辑 |
+| TODO-R4-3 | ✅ 已完成 | Sisyphus | 2026-03-29 | 新增 UserServiceImplTest，覆盖资料/搜索/联系人关键路径 |
+| TODO-R4-4 | ✅ 已完成 | Sisyphus | 2026-03-29 | MediaType 新增 GIF/WEBP 并统一图片展示 |
 
 ---
 
-## 5. 遗留项（Round 4 及以后）
+## 6. 遗留项（Round 5 及以后）
 
 | 任务 | 优先级 | 说明 |
 |------|--------|------|
-| Entity → DTO 响应改造 | Medium | FlashNote/Message/Collection/UserProfile 控制器直接返回实体，需创建响应 DTO；需 Android 客户端协调 |
-| FileService 单元测试 | Low | 新增上传校验和路径安全测试 |
-| UserService 单元测试 | Low | 补充 searchUsers 等方法测试 |
-| 媒体类型枚举扩展 | Low | 支持更多媒体类型（GIF/WebP 等） |
+| Android API 契约核对 | Medium | 当前已完成后端 DTO 化，需要核对 Android `ApiClient`/模型层是否按新字段结构消费 |
+| Search 响应深度 DTO 化 | Medium | `FlashNoteSearchResponse` 当前 controller 已映射为 DTO，但 service 内部搜索模型仍保留 entity 作为中间态 |
+| Message payload 精细 DTO | Low | 当前 `MessageResponse` 仍直接承载 `CardPayload`，若后续要彻底脱离实体实现可继续拆分 |
 
 ---
 
-*最后更新：2026-03-29*
+*最后更新：2026-03-29 Round 4* 
