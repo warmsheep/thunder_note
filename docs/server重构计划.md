@@ -278,6 +278,8 @@
 | TODO-R4-2 | ✅ 已完成 | Sisyphus | 2026-03-29 | 新增 FileServiceImplTest，覆盖上传与路径安全逻辑 |
 | TODO-R4-3 | ✅ 已完成 | Sisyphus | 2026-03-29 | 新增 UserServiceImplTest，覆盖资料/搜索/联系人关键路径 |
 | TODO-R4-4 | ✅ 已完成 | Sisyphus | 2026-03-29 | MediaType 新增 GIF/WEBP 并统一图片展示 |
+| TODO-R4-5 | ✅ 已完成 | Sisyphus | 2026-03-29 | Android 侧已对齐 Round 4 DTO 契约：消息分页、FlashNote.deleted、UserProfile LocalDateTime |
+| TODO-R4-6 | ✅ 已完成 | Sisyphus | 2026-03-29 | Android 调用层 API 契约全量对齐：Auth/User/Sync 弱类型 body 收敛为 DTO，消息计数改 Long |
 
 ---
 
@@ -285,10 +287,10 @@
 
 | 任务 | 优先级 | 说明 |
 |------|--------|------|
-| Android API 契约核对 | Medium | 当前已完成后端 DTO 化，需要核对 Android `ApiClient`/模型层是否按新字段结构消费 |
 | Search 响应深度 DTO 化 | Medium | `FlashNoteSearchResponse` 当前 controller 已映射为 DTO，但 service 内部搜索模型仍保留 entity 作为中间态 |
 | Message payload 精细 DTO | Low | 当前 `MessageResponse` 仍直接承载 `CardPayload`，若后续要彻底脱离实体实现可继续拆分 |
+| 消息 SSE 实时订阅接入 | Low | 后端已提供 `GET /api/messages/stream`，Android 当前主链尚未消费；属于能力缺口，不是现有接口漂移 |
 
 ---
 
-*最后更新：2026-03-29 Round 4* 
+*最后更新：2026-03-29 Round 4 + Android 全量接口契约对齐* 
