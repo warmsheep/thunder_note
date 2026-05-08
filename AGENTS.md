@@ -93,6 +93,11 @@ thunder_note/
   - 确认改动属于当前仓库（根仓 vs 子仓库）
   - 确认没有误提交 IDE 配置、build 产物等
   - 确认提交信息准确描述了改动内容
+- **提交信息一律走文件，不要用多行 `-m`**：
+  - 在 IDE 内置终端里用 `git commit -m "多行..."` 容易因 shell 等待引号闭合而把命令面板挂住，造成看似"卡死"的体验。
+  - 标准做法：先 `write_to_file` 把提交信息写到 `/tmp/tn_<task>_commit_msg.txt`，再 `git commit -F /tmp/tn_<task>_commit_msg.txt`。
+  - 单行简短提交可以用 `git commit -m "..."`，但消息中**不允许出现换行**。
+  - 反模式：`git commit -m "第一行<换行>第二行"`，无论是否带 `\n`，都不要再生成。
 
 ## 阶段开发原则
 - 默认按 `docs/完整开发计划.md` 的阶段顺序推进：MVP → 增强版 → 完整项目 → 远期扩展。
