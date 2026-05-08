@@ -9,6 +9,7 @@
 - 大多数普通 JSON 接口使用统一响应结构：`{ code, message, data, timestamp }`
 - 当前登录请求字段使用 `username`，不是 `email`
 - 当前主线 JSON 读取接口统一收敛为 `POST`；文件下载与 SSE 仍保留 `GET`
+- 后续 Web 用户端首版同样复用当前 `/api/...` 契约，不单独定义一套 Web 专用 API 前缀
 
 例外：
 - `GET /api/messages/stream` 返回 `SseEmitter`，不是 `ApiResponse`
@@ -385,6 +386,12 @@
 - 当前接收 notes / collections / messages / favorites payload，并返回 processed 计数与 serverTime
 
 ## 当前已实现接口
+### Web 用户端复用说明
+- 当前 Web 用户端尚未落地真实代码。
+- 后续 Web 版代码按计划写入 `thunder_note_server/`，由同一个 Spring Boot 服务同时提供 Android API 与 Web 页面。
+- Web v1 应优先复用本节已有接口完成登录、闪记、消息、合集、收藏、文件、搜索与个人资料能力。
+- Web API 客户端新增或调整调用时，必须先核对真实 controller；不能按旧文档写成 `/api/v1/...` 或邮箱登录。
+
 ### 认证
 | 方法 | 路径 | 说明 |
 |------|------|------|
@@ -471,4 +478,5 @@
 - 任何新增接口，先更新“当前已实现接口”部分
 - 任何尚未实现但已确定保留的能力，放到“当前未实现但设计存在的接口”部分
 - 不再把目标态接口写成“当前可用”语气
+- Web 端新增 API 调用时，先复用本文件当前接口；确需新增服务端接口时，再补 controller 与本文件，不能只在前端硬编码
 - 请求体、响应体、错误码、认证要求发生变化时，必须同步更新本文件
