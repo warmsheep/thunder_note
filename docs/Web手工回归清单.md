@@ -65,7 +65,10 @@
 
 ---
 
-## 3. 消息（`/chat/:flashNoteId`）
+## 3. 消息（`/chat/:flashNoteId` 与 `/chat/contact/:peerUserId`）
+
+> **W20** 同一个 ChatView 同时承担两种身份：闪记会话 / 联系人 1v1 对话。下面 § 3.1～§ 3.6 在两种身份下都跑一遍；§ 3.7 是联系人模式专属。
+
 
 ### 3.1 进入会话（W19-02）
 - [ ] 首次进入 → 自动滚到底部，看到最新消息
@@ -98,6 +101,18 @@
 ### 3.6 收集箱清空（W16）
 - [ ] 仅在 `flashNoteId=-1` 时显示「清空」按钮
 - [ ] 清空后消息列表为空，闪记列表中收集箱 latestMessage 也更新
+- [ ] 联系人对话中**不显示**「清空」按钮（W20-03 isInbox getter 在 peer 模式总为 false）
+
+### 3.7 联系人 1v1 对话专项（W20）
+- [ ] 从 `/contacts` → 点击 FRIEND 联系人「💬 聊天」 → 跳到 `/chat/contact/<userId>`
+- [ ] 路由直进场景（粘贴 URL）→ ChatView 仍能拉消息；header 显示对方昵称（contactsStore 异步加载完成后会更新）
+- [ ] header 头像：联系人有头像时使用 `AuthenticatedAvatar`；没有头像走 fallback 字
+- [ ] 发送：optimistic 气泡的 `receiverId === peerUserId`，`flashNoteId == null`；server 回包后被替换
+- [ ] 加载更多：上滑触发 loadMore，请求 body 含 `peerUserId`，**不**含 `flashNoteId`
+- [ ] sessionStorage key 为 `tn:chat:scroll:peer:<userId>`，与 `tn:chat:scroll:fn:<userId>` 互不污染（W20-04）
+- [ ] 多选 → 转发对话框：tab「闪记会话 / 联系人」可切换；联系人 tab 仅列出 `relationStatus === 'FRIEND'` 且非自己
+- [ ] 收藏 / 删除 / 多选 / 合并卡片在联系人模式同样可用（mergeMessages 走 receiverId，sendMessage 走 receiverId）
+- [ ] header「返回」按钮 fallback 走 `/contacts`（在闪记模式 fallback 走 `/notes`）
 
 ---
 
