@@ -403,7 +403,56 @@
 
 ---
 
-## 15. 安全边界（自动测试覆盖）
+## 15. 闪记卡片对齐（W25）
+
+> D1.8 阶段第一刀：把 Web 卡片消息从「文字按钮 + 字段列表」升级到与 Android `MessageCompositeBinder` / `CardDetailActivity` 同等的视觉密度。
+
+### 15.1 卡片气泡媒体网格（W25-01）
+- [ ] 进入有 COMPOSITE 卡片的会话（合并消息 / 卡片新建得到）
+- [ ] 1 张图片 → 单列大缩略图，aspect-ratio 4:3，最大高度 220px
+- [ ] 2 张 → 2 列；4 张 → 2 列
+- [ ] 3 / 5 / 6 / 9 张 → 3 列
+- [ ] 视频项缩略图叠加 ▶ 播放图标
+- [ ] 缩略图加载失败 → 显示「📷」占位（不破坏布局）
+- [ ] 卡片含 FILE / VOICE / AUDIO 类 item → 网格下方独立列出「📎 文件名」
+- [ ] 整张卡片可点击 → 打开详情对话框
+- [ ] 滚动列表上下翻动时缩略图按需加载，不阻塞
+
+### 15.2 卡片详情对话框（W25-02）
+- [ ] 点击卡片气泡 → 弹出「卡片详情」modal，标题 = `payload.title`
+- [ ] modal 顶部展示 `payload.summary`（如果有）
+- [ ] 每个 item 一行卡片，左侧序号圆点 + 右侧媒体预览
+- [ ] IMAGE → `<img>` 通过鉴权 `fetchAsObjectUrl` 加载，点击放大走 ImageLightbox
+- [ ] VIDEO → `<video controls>`，可播放
+- [ ] AUDIO / VOICE → `<audio controls>`，可播放
+- [ ] FILE → 文件图标 + fileName + size + 「下载」按钮
+- [ ] PDF → 「预览」按钮（PdfViewerDialog）
+- [ ] TEXT 类 item（仅 content）→ markdown 渲染
+- [ ] 关闭：modal × 按钮 / 点空白处 / ESC 都能关闭
+- [ ] 关闭后再次打开同一张卡片不残留旧 blob URL（DevTools 检查 memory）
+
+### 15.3 卡片编辑器 markdown 工具栏（W25-03）
+- [ ] 在 ChatView 点击「📇 新卡片」打开 CardEditorDialog
+- [ ] 正文 textarea 上方有 4 个工具按钮：**B** / *I* / ❝ / ☐
+- [ ] **B**：选中「abc」点击 → 变为「**abc**」，光标包住整段
+- [ ] **B**：未选中点击 → 插入「\*\***\*\***」，光标停在两组星号之间
+- [ ] *I*：行为同上，prefix/suffix 是单 `*`
+- [ ] ❝：当前行加 `> `；再点取消（行首恢复）
+- [ ] ☐：当前行加 `- [ ] `；再点取消
+- [ ] 选中跨多行后点 ❝ / ☐：所有行批量加；再点批量取消
+- [ ] busy / disabled 状态下工具栏按钮也禁用
+- [ ] 输入完点保存 → 卡片创建成功，正文 markdown 在卡片气泡 / 详情中正确渲染
+
+### 15.4 summary 智能兜底（W25-04）
+- [ ] 创建一张只含 3 张图的卡片（不填正文）→ 卡片气泡 summary = 「[图片]\n[图片]\n[图片]」
+- [ ] 创建一张含图片 + 文件的卡片 → 气泡 summary 按 items 顺序拼接
+- [ ] 创建卡片时填了正文 → summary 显示用户写的正文，不被覆盖
+- [ ] 含 5 个 item 的卡片 → summary 只展示前 3 行，多余截断
+- [ ] 跨行 summary 在气泡内换行正确（CSS `white-space: pre-wrap`）
+
+---
+
+## 16. 安全边界（自动测试覆盖）
 
 > 这些都已被 `WebStaticResourceIntegrationTest` 与 `ControllerHttpMethodContractTest` 自动校验，列在这里仅作清单。如自动测试通过则视为这一节通过。
 
