@@ -63,11 +63,19 @@
 - [ ] 置顶 / 取消置顶 → 列表位置变化
 - [ ] 隐藏 / 取消隐藏 → 切到 / 离开主列表
 
+### 2.3 快速捕获 FAB（W22-01 / W22-02 / W22-05）
+- [ ] 右下角悬浮「+」按钮，点击弹出气泡菜单
+- [ ] 桌面端菜单项：文字 / 图片 / 视频 / 文件
+- [ ] 移动端（pointer: coarse）额外有「拍照」一项
+- [ ] 文字 → 弹出 `QuickCaptureDialog`：textarea + Cmd/Ctrl+Enter 直发 + ESC 取消；成功后 toast「已发送到收集箱」
+- [ ] 图片 / 视频 / 文件 → 选择本地文件 → 直接发到收集箱；不打开会话页，闪记列表中收集箱预览自动刷新
+- [ ] 移动端「拍照」 → 调起系统相机（input capture=environment）
+
 ---
 
 ## 3. 消息（`/chat/:flashNoteId` 与 `/chat/contact/:peerUserId`）
 
-> **W20** 同一个 ChatView 同时承担两种身份：闪记会话 / 联系人 1v1 对话。下面 § 3.1～§ 3.7 在两种身份下都跑一遍；§ 3.8 是联系人模式专属。
+> **W20** 同一个 ChatView 同时承担两种身份：闪记会话 / 联系人 1v1 对话。下面 § 3.1～§ 3.7 在两种身份下都跑一遍；§ 3.8 是联系人模式专属；§ 3.9 / § 3.10 是 W22 创作能力。
 
 
 ### 3.1 进入会话（W19-02）
@@ -125,6 +133,26 @@
 - [ ] 多选 → 转发对话框：tab「闪记会话 / 联系人」可切换；联系人 tab 仅列出 `relationStatus === 'FRIEND'` 且非自己
 - [ ] 收藏 / 删除 / 多选 / 合并卡片在联系人模式同样可用（mergeMessages 走 receiverId，sendMessage 走 receiverId）
 - [ ] header「返回」按钮 fallback 走 `/contacts`（在闪记模式 fallback 走 `/notes`）
+
+### 3.9 多媒体卡片新建（W22-03）
+- [ ] header 「📇 新卡片」按钮（仅非多选时显示）
+- [ ] 弹出 `CardEditorDialog`：标题（必填，maxLength 50）+ 正文（可选）+ 多附件区（max 9）
+- [ ] 「+ 添加附件」可选多文件；附件溢出 9 个时提示
+- [ ] 拖拽文件到对话框任意位置 → 加入附件；拖拽时显示半透明覆盖层
+- [ ] 在正文 textarea 粘贴图片 → 自动加入附件
+- [ ] 单类型 image → 后端自动判 cardType=IMAGE_COLLECTION；单类型 video → VIDEO_COLLECTION；单类型 file → FILE_COLLECTION；混合类型 → COMPOSITE_CARD
+- [ ] 保存：依次串行上传，每个附件显示当前进度；全部成功后单条 COMPOSITE 消息进会话，非中间多条单消息
+- [ ] toast「卡片已创建」，列表自动 reload 拉回新卡片
+- [ ] 联系人 1v1 模式同样可用（receiverId 路径）
+
+### 3.10 Composer 多附件 + 粘贴 + 拖拽（W22-04 / W22-06 / W22-07）
+- [ ] 「📎」按钮可一次选择多文件（multiple）；图片/视频显示缩略图，文件显示 emoji
+- [ ] 单个附件可独立移除；附件累计达 9 个时新增触发 toast 提示
+- [ ] textarea 粘贴图片 → 直接进入附件队列（preventDefault 阻止默认粘贴文本）
+- [ ] 整个 composer 支持拖拽文件 → 进入附件队列；拖拽时显示「松手上传」提示
+- [ ] 含 N 个附件时发送：第一条带文本（caption），后续 N-1 条只带 media；进度条按文件切换
+- [ ] 任一附件上传失败：剩余文件保留在 pendingFiles，toast 显示「已发送 X/Y」
+- [ ] 移动端 composer 出现「📷」按钮 → 调系统相机；桌面端不显示该按钮
 
 ---
 
