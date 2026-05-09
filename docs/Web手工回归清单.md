@@ -251,33 +251,74 @@
 
 ---
 
-## 10. 个人资料（`/profile`，W11）
+## 10. 个人资料（`/profile`，W11 + W23）
 
 - [ ] 头像 / 昵称 / 简介 显示当前数据
 - [ ] 编辑昵称（≤32 字）+ 简介 → 保存 → 立即生效
-- [ ] 上传头像（image/* 且 ≤5MB）→ 进度条 → 上传完后头像更新
-- [ ] 设置卡片：服务地址（origin）/ 客户端版本 / 当前用户 ID
-- [ ] **不显示** access_token / refresh_token
 - [ ] 「我的联系人」入口 → `/contacts`
 - [ ] 「修改密码」入口 → `/change-password`
+- [ ] 「⚙ 设置」入口 → `/settings`（W23-03）
 - [ ] 「退出登录」 → 清空 store + 跳 `/login`
+- [ ] **不显示** access_token / refresh_token
+
+### 10.1 头像选择与裁剪（W23-01 / W23-02）
+- [ ] 点击「更换头像」 → 弹出 `AvatarPickerDialog`，默认选中 Emoji tab
+- [ ] Emoji tab：4×3 网格，12 个表情（💼 📚 ❤️ 🌟 🎯 🚀 🎨 🎵 📷 🍕 ⚽ 😊）
+- [ ] 当前头像若为 emoji，对应格子高亮
+- [ ] 点击任一 emoji → 关闭对话框 + toast「头像已更新」+ 头像区直接展示 emoji（不走网络）
+- [ ] 切到「上传图片」tab → 选本地图片 (image/* 且 ≤5MB)
+- [ ] 非图片 / 过大 → 提示错误不进入裁剪
+- [ ] 选图合法 → 自动关闭 picker，弹出 `AvatarCropDialog`
+- [ ] 裁剪：拖动图片 / 滚轮缩放 / 底部滑块 / ±按钮 缩放；圆形遮罩预览
+- [ ] 确认 → 输出 512×512 JPEG 上传 → toast「头像已更新」
+- [ ] 取消裁剪 → 返回 picker（不是直接关闭）
+- [ ] 上传中「更换头像」按钮显示进度百分比并禁用
+
+### 10.2 统计卡片（W23-05）
+- [ ] 三列网格：闪记 / 消息 / 收藏
+- [ ] 数据未加载时显示「-」；加载成功显示实际数字
+- [ ] 数据来源：闪记 = flashNotesStore.visibleCount；消息 = `/api/messages/count`；收藏 = favoritesStore.list.length
 
 ---
 
-## 11. 响应式与可用性（W12）
+## 11. 设置（`/settings`，W23-03）
 
-### 11.1 桌面（W12-01）
+- [ ] header 返回按钮 → 返回上级（优先浏览器 back，否则 `/profile`）
+- [ ] 通用块：
+  - [ ] 「修改密码」 link-row → `/change-password`
+  - [ ] 「关于 Thunder Note」 link-row → `/settings/about`
+- [ ] 系统信息块：服务地址 / 客户端版本 / 构建时间（仅 env 有值时）/ 当前用户 ID / 用户名
+- [ ] 项目块：项目主页外链（target=_blank + rel=noopener）
+- [ ] 危险块：「退出登录」 → 清空 store + 跳 `/login`
+- [ ] 不显示任何 token
+
+---
+
+## 12. 关于（`/settings/about`，W23-04）
+
+- [ ] header 返回 → 返回上级（优先浏览器 back，否则 `/settings`）
+- [ ] Hero 卡片：应用图标 / 应用名「Thunder Note 闪记」/ 简介 / 版本号（VITE_APP_VERSION）/ 构建时间（VITE_APP_BUILD_TIME，可选）
+- [ ] 项目主页外链
+- [ ] Web 技术栈（5 项：Vue 3 / Vite / Pinia / Vue Router / marked+DOMPurify），每项都能点开到原项目
+- [ ] 致谢
+- [ ] 许可证说明段
+
+---
+
+## 13. 响应式与可用性（W12）
+
+### 13.1 桌面（W12-01）
 - [ ] 1440 / 1920：sidebar 248px，content 居中限宽 1180px
 - [ ] 4K：内容不会撑满整行
 - [ ] ChatView 在 ≥1280：消息列宽视觉收窄到 980px 居中，header / composer 全宽
 
-### 11.2 移动（W12-02）
+### 13.2 移动（W12-02）
 - [ ] ≤768：sidebar 收起 → bottombar；topbar user-name 隐藏（保留头像 + 红点）
 - [ ] ≤480：bottombar 字号收紧；content padding 收紧；ChatView padding 12px
 - [ ] iOS Safari：`env(safe-area-inset-bottom)` 适配底部小白条
 - [ ] 输入框聚焦不会触发整页缩放（`-webkit-text-size-adjust: 100%`）
 
-### 11.3 a11y（W12-03 / W12-04）
+### 13.3 a11y（W12-03 / W12-04）
 - [ ] **键盘 Tab**：所有按钮 / 输入框 / 链接显示**绿色焦点环**
 - [ ] **鼠标点击**：不显示焦点环（`:focus` vs `:focus-visible`）
 - [ ] 屏幕阅读器：搜索框 / 清空按钮 / 头像有可读 label
@@ -287,7 +328,7 @@
 
 ---
 
-## 12. 安全边界（自动测试覆盖）
+## 14. 安全边界（自动测试覆盖）
 
 > 这些都已被 `WebStaticResourceIntegrationTest` 与 `ControllerHttpMethodContractTest` 自动校验，列在这里仅作清单。如自动测试通过则视为这一节通过。
 
