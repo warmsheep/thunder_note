@@ -98,6 +98,19 @@ thunder_note/
   - 标准做法：先 `write_to_file` 把提交信息写到 `/tmp/tn_<task>_commit_msg.txt`，再 `git commit -F /tmp/tn_<task>_commit_msg.txt`。
   - 单行简短提交可以用 `git commit -m "..."`，但消息中**不允许出现换行**。
   - 反模式：`git commit -m "第一行<换行>第二行"`，无论是否带 `\n`，都不要再生成。
+- **严禁在 `run_command` 里用任何形式的多行输入写文件，包括但不限于：**
+  - `cat > /tmp/foo.txt << 'EOF' ... EOF`（heredoc）
+  - `printf '第一行\n第二行\n' > /tmp/foo.txt`（多行 printf）
+  - 多行 `echo -e "..."`、`tee`、`> file` 接续多行字符串
+  - 这些方式在 IDE 内置终端里**与 `git commit -m "多行..."` 等价**，shell 仍在等待 EOF/引号闭合，会把命令面板挂住，用户体验是"卡死"。即使命令在普通 shell 里能跑通，IDE 终端里也不能用。
+- **写文件只走 `write_to_file` / `edit` 工具，不走 `run_command`**：
+  - 创建提交信息文件、临时脚本、临时配置一律用 `write_to_file`。
+  - 文件创建好之后再用 `run_command` 调 `git commit -F <path>` 或 `bash <path>`。
+  - 如果上一次 `write_to_file` 写到 `/tmp/` 的文件因系统清理消失了，**重新调 `write_to_file`**，不要改用 heredoc"绕过"。
+- **反模式锁定（多次重犯，强制锁死）：**
+  - 出现 `<< 'EOF'`、`<<EOF`、`<<-EOF`、多行 `printf`、多行 `echo -e` 写文件 → 一律视为违规，必须立刻改成 `write_to_file`。
+  - 出现 `git commit -m "<带换行的字符串>"` → 一律视为违规。
+  - 检测到自己已经写出违规命令草稿，应当主动撤回并改用 `write_to_file`，而不是"先发出去试试"。
 
 ## 阶段开发原则
 - 默认按 `docs/完整开发计划.md` 的阶段顺序推进：MVP → 增强版 → 完整项目 → 远期扩展。
