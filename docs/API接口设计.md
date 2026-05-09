@@ -387,10 +387,12 @@
 
 ## 当前已实现接口
 ### Web 用户端复用说明
-- 当前 Web 用户端尚未落地真实代码。
-- 后续 Web 版代码按计划写入 `thunder_note_server/`，由同一个 Spring Boot 服务同时提供 Android API 与 Web 页面。
-- Web v1 应优先复用本节已有接口完成登录、闪记、消息、合集、收藏、文件、搜索与个人资料能力。
-- Web API 客户端新增或调整调用时，必须先核对真实 controller；不能按旧文档写成 `/api/v1/...` 或邮箱登录。
+- **D1 Web v1 已完整落地**（D1-W0~W19 + W12 + W13），代码位于 `thunder_note_server/frontend/`。
+- 同一个 Spring Boot 服务（`thunder-note-server`）同时承载：Android `/api/**` 调用、Web SPA `/`、`/index.html`、`/assets/**` 与 SPA 内部路由 fallback。
+- Web 端**完全复用本节已实现接口**，未新增任何 Web 专用前缀；具体路径与 HTTP 方法由 `ControllerHttpMethodContractTest`（10 项）锁住，路径漂移会立即触发测试失败。
+- Web 静态资源与安全边界：参见 `Web构建与部署.md` § 5；自动测试由 `WebStaticResourceIntegrationTest`（11 项）守关。
+- Web 当前**显式不实现**的 Android 能力：手势锁本地解锁、系统分享接收、离线同步引擎、录音 / 语音消息、视频压缩、服务端 BaseURL 切换、调试日志查看页、全局快速捕获。详见 `完整开发计划.md` § D1.6 "Web v1 范围之外"。
+- 维护规则：Web API 客户端新增或调整调用时，必须先核对真实 controller；不能按旧文档写成 `/api/v1/...` 或邮箱登录。
 
 ### 认证
 | 方法 | 路径 | 说明 |
