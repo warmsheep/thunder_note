@@ -45,8 +45,8 @@
 - 更完整的多媒体消息能力
 
 ## 远期规划
-- Web 用户端：已明确后续写入 `thunder_note_server/`，同一 Spring Boot 服务同时提供 Android API 与 Web 页面；详细执行计划见 `完整开发计划.md` 的 `D1`
-- iOS 客户端
+- Web 用户端：已落地在 `thunder_note_server/frontend/`，同一 Spring Boot 服务同时提供 Android API 与 Web 页面；详细执行计划见 `完整开发计划.md` 的 `D1`
+- iOS 客户端：`thunder_note_ios/` 独立 Git 目录已创建；后续仍需建立 Xcode / SwiftUI 工程
 - 管理后台
 
 ## 维护规则

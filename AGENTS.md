@@ -1,17 +1,18 @@
 # 项目知识库
 
 **生成时间：** 2026-03-13 Asia/Shanghai
-**仓库状态：** 根目录是 git 仓库，`thunder-note-server/` 与 `thunder-note-android/` 也各自是独立 git 子仓库
+**仓库状态：** 根目录是 git 仓库，`thunder_note_server/`、`thunder_note_android/`、`thunder_note_ios/` 也各自是独立 git 子仓库
 
 ## 项目概览
-Thunder Note（闪记）当前是"已实现代码 + 目标态规划 + 原型探索"混合仓库。真实代码以 Spring Boot 后端和 Android Java 客户端为主，同时保留大量中文设计文档与一个大型 HTML 原型。
+Thunder Note（闪记）当前是"已实现代码 + 目标态规划 + 原型探索"混合仓库。真实代码以 Spring Boot 后端、Android Java 客户端和 Web 用户端 v1 为主，同时保留大量中文设计文档与一个大型 HTML 原型；`thunder_note_ios/` 目前仅是 iOS 独立仓库基线。
 
 ## 目录结构
 ```text
 thunder_note/
 ├── docs/                    # 产品、架构、API、数据库，同步，设计文档
-├── thunder-note-server/     # Spring Boot 后端
-├── thunder-note-android/    # Android 客户端
+├── thunder_note_server/     # Spring Boot 后端 + Web 用户端 v1
+├── thunder_note_android/    # Android 客户端
+├── thunder_note_ios/        # iOS 独立 Git 目录，当前仅仓库基线
 ├── thunder-note-prototype.html  # 交互原型
 ├── scripts/                 # 调试/自动化脚本
 └── artifacts/               # 生成物，不是事实来源
@@ -30,7 +31,7 @@ thunder_note/
 - 文档常写 `/api/v1/...`，当前后端控制器实际使用 `/api/...`
 - 认证文档主要按邮箱登录描述，但当前后端实际按用户名登录
 - `数据库设计.md` 等旧文档里仍有 MySQL 表述，当前真实数据库是 PostgreSQL
-- 文档描述了 Web/iOS/admin 等能力，但当前仓库实际只有后端、Android、文档和 HTML 原型
+- Web v1 已落地在 `thunder_note_server/frontend/`；iOS 已创建 `thunder_note_ios/` 独立 Git 目录但尚无客户端工程；admin 仍无代码目录
 - 同步、搜索、收藏、系统信息等设计明显领先于当前实现
 
 ## 高频入口
@@ -44,9 +45,9 @@ thunder_note/
 | 当前 API | `docs/API接口设计.md` | 先看当前实现，再看未实现目标态 |
 | 数据库事实 | `docs/数据库设计.md` | 与 Flyway 一致的当前态文档 |
 | 同步设计 | `docs/数据同步协议设计.md` | 目标态优先，当前实现较轻 |
-| 后端入口 | `thunder-note-server/src/main/java/com/flashnote/FlashNoteApplication.java` | Spring Boot 入口 |
-| Android 入口 | `thunder-note-android/app/src/main/java/com/flashnote/java/MainActivity.java` | Java 客户端宿主 |
-| Android 主壳 | `thunder-note-android/app/src/main/java/com/flashnote/java/ui/main/MainShellFragment.java` | 当前主页面与底部 tab |
+| 后端入口 | `thunder_note_server/src/main/java/com/flashnote/FlashNoteApplication.java` | Spring Boot 入口 |
+| Android 入口 | `thunder_note_android/app/src/main/java/com/flashnote/java/MainActivity.java` | Java 客户端宿主 |
+| Android 主壳 | `thunder_note_android/app/src/main/java/com/flashnote/java/ui/main/MainShellFragment.java` | 当前主页面与底部 tab |
 
 ## 约定
 - `AGENTS.md` 一律使用中文编写。
@@ -58,7 +59,7 @@ thunder_note/
 - 当前 Java 客户端里，`auth`、`flashnote`、`chat` 已有可编译主链；`collection`、`favorite`、`profile` 仍偏占位壳层。
 - 判断 Android 是否为真实实现还是桩实现时，优先检查 repository 是否有真实网络调用、是否只返回内存数据或占位数据。
 - 遇到 Android 相关任务时，优先区分：当前 Java 客户端事实、未来待补能力。
-- git 提交时，根仓只提交文档、原型、脚本和规则类改动；`thunder-note-server/`、`thunder-note-android/` 的代码改动必须进入各自子仓库单独提交。
+- git 提交时，根仓只提交文档、原型、脚本和规则类改动；`thunder_note_server/`、`thunder_note_android/`、`thunder_note_ios/` 的代码改动必须进入各自子仓库单独提交。
 - 不要在根仓用 `git add -f` 把子仓代码快照纳入提交；若误纳入，必须在根仓回退索引并改为在子仓提交。
 
 ## 反模式
@@ -75,7 +76,7 @@ thunder_note/
 - 处理 Android 任务时，必须先区分：当前 Java 客户端已实现部分、当前 Java 客户端占位部分；不能混写成一个统一成熟状态。
 - 处理视觉/产品问题时，先看原型与 `docs/页面设计规范.md`，再确认当前代码是否真的实现。
 - 如果一个判断会影响接口、数据结构或跨端行为，至少同时核对文档与一处真实代码入口。
-- 遇到跨根仓 + 子仓的 git 操作时，先判断变更归属：文档/原型走根仓，后端代码走 `thunder-note-server/`，Android 代码走 `thunder-note-android/`；必要时三个仓分别提交。
+- 遇到跨根仓 + 子仓的 git 操作时，先判断变更归属：文档/原型走根仓，后端代码走 `thunder_note_server/`，Android 代码走 `thunder_note_android/`，iOS 代码走 `thunder_note_ios/`；必要时多个仓分别提交。
 
 ## Git 提交规范
 - **提交信息必须使用中文**，清晰描述本次改动的目的和内容。
@@ -137,12 +138,12 @@ thunder_note/
 
 ## 常用命令
 ```bash
-cd thunder-note-server && mvn clean compile
-cd thunder-note-server && mvn test
+cd thunder_note_server && mvn clean compile
+cd thunder_note_server && mvn test
 
-cd thunder-note-android && ./gradlew assembleDebug
-cd thunder-note-android && ./gradlew test
-cd thunder-note-android && ./gradlew lint
+cd thunder_note_android && ./gradlew assembleDebug
+cd thunder_note_android && ./gradlew test
+cd thunder_note_android && ./gradlew lint
 ```
 
 ## 备注

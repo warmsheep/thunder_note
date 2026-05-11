@@ -11,6 +11,10 @@
 		{
 			"name": "📱 Android",
 			"path": "thunder-note-android"
+		},
+		{
+			"name": "📱 IOS",
+			"path": "thunder-note-ios"
 		}
 	],
 	"settings": {
@@ -19,7 +23,8 @@
 		"git.repositoryScanMaxDepth": 1,
 		"files.exclude": {
 			"thunder-note-server": true,
-			"thunder-note-android": true
+			"thunder-note-android": true,
+			"thunder-note-ios": true
 		}
 	}
 }
