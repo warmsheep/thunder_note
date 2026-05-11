@@ -391,7 +391,7 @@
 - 同一个 Spring Boot 服务（`thunder-note-server`）同时承载：Android `/api/**` 调用、Web SPA `/`、`/index.html`、`/assets/**` 与 SPA 内部路由 fallback。
 - Web 端**完全复用本节已实现接口**，未新增任何 Web 专用前缀；具体路径与 HTTP 方法由 `ControllerHttpMethodContractTest`（10 项）锁住，路径漂移会立即触发测试失败。
 - Web 静态资源与安全边界：参见 `Web构建与部署.md` § 5；自动测试由 `WebStaticResourceIntegrationTest`（11 项）守关。
-- Web 当前**显式不实现**的 Android 能力：手势锁本地解锁、系统分享接收、离线同步引擎、录音 / 语音消息、视频压缩、服务端 BaseURL 切换、调试日志查看页、全局快速捕获。详见 `完整开发计划.md` § D1.6 "Web v1 范围之外"。
+- Web 当前**不适用**的 Android / App 专属能力：同步 / 待同步列表 / 手动同步、手势锁本地解锁、系统分享接收、视频压缩、服务端 BaseURL 切换、调试日志查看页。Web 与 API 同源，直接读写服务端事实数据，不接 Android 离线同步队列；详见 `完整开发计划.md` § D1.6 "Web 不适用项"。
 - 维护规则：Web API 客户端新增或调整调用时，必须先核对真实 controller；不能按旧文档写成 `/api/v1/...` 或邮箱登录。
 
 ### 认证
